@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { Cabin,Ubuntu} from "next/font/google";
-import GlobeImage from"@/public/globe.svg";
+import { Cabin, Ubuntu, Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
+import Sidebar from "@/app/components/Sidebar";
+import Header from "@/app/components/Header";
+import { cn } from "@/lib/utils";
 
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
-const CabinFont=Cabin(
-  {
-  subsets:["latin"]},
-);
+const CabinFont = Cabin({
+  subsets: ["latin"],
+});
 const UbuntuBlack = Ubuntu({
   weight: "400",
   subsets: ["latin"],
@@ -27,45 +27,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${CabinFont.className} text-xl h-full antialiased`}
+      className={cn("text-xl", "h-full", "antialiased", CabinFont.className, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-
-            <div style={{ display: "flex", height: "100vh" }}>
-    <aside style={{ width: 200, padding: 16, borderRight: "1px solid #ddd" }}>
-      <Image width={100} height={100}  src={GlobeImage.src} alt="sss"/>
-
-      <nav>
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          <li><Link  href="/">Dashboard</Link></li>
-          <li><Link href="/settings">Settings</Link></li>
-        </ul>
-      </nav>
-    </aside>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            <header
-      style={{
-        height: 60,
-        borderBottom: "1px solid #ddd",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 16px",
-        justifyContent: "space-between",
-      }}
-    >
-      <h2 className={UbuntuBlack.className}>Dashboard</h2>
-
-      <div>
-        <span>Tasks: 12</span>
-      </div>
-    </header>
-        <main style={{ padding: 16, flex: 1, overflow: "auto" }}>
-        {children}
-        </main>
-      </div>
-    </div>
-        
-        </body>
+        <div style={{ display: "flex", height: "100vh" }}>
+          <Sidebar />
+          <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <Header />
+            <main style={{ padding: 16, flex: 1, overflow: "auto" }}>
+              {children}
+            </main>
+          </div>
+        </div>
+      </body>
     </html>
   );
 }

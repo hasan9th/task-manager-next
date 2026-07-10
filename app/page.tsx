@@ -1,10 +1,15 @@
-import Image from "next/image";
+import TaskList from "@/app/components/tasks/TaskList";
 
-export default function HomePage() {
+import TaskForm from "@/app/components/tasks/TaskForm";
+import { TasksProvider } from "./context/taskContext";
+export default function Dashboard() {
   return (
-    <>
-      <h1>Welcome to my Task Manager</h1>
-      <p>This is my first Next.js page.</p>
-    </>
+    <TasksProvider>
+      {/* <div className="relative top-0 left-0 w-full h-full bg-amber-200 bg-opacity-5 font-black text-3xl">
+        Loading...
+      </div> */}
+      <TaskForm />
+      <TaskList />
+    </TasksProvider>
   );
 }
