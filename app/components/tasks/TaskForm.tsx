@@ -1,44 +1,45 @@
 "use client";
-import type { Task } from "@/app/types/task";
-import { useState, type ChangeEvent } from "react";
 import { useTask } from "@/app/hooks/useTask";
 import { Button } from "@/components/ui/button";
-import { Card,CardHeader,CardContent,CardFooter } from "@/components/ui/card";
-
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { taskSchema, TaskFormData } from "@/app/schema/taskSchema";
 export default function TaskForm() {
-  const { tasks, addTask } = useTask();
-  const [task, setTask] = useState<Task>({
-    id: "",
-    title: "",
-    description: "",
-    status: "todo",
-    priority: "medium",
-    dueDate: "",
-    completed: false,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<TaskFormData>({
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      status: "todo",
+      priority: "medium",
+      dueDate: "",
+      completed: false,
+    },
   });
 
-  function onChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) {
-    const { id, value } = e.target;
-    setTask((prev) => ({
-      ...prev,
-      id: Date.now().toString(),
-      [id]: value,
-    }));
-  }
+  const { addTask } = useTask();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    addTask(task);
+  function onSubmit(data:TaskFormData) {
+    console.log(data);
+    console.log(errors);
+    reset();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="">
+    <form onSubmit={handleSubmit(onSubmit)} className="">
       <Card>
-        <CardHeader>
-          New Task
-        </CardHeader>
+        <CardHeader>New Task</CardHeader>
         <CardContent>
           {/* Title */}
           <div>
@@ -51,11 +52,11 @@ export default function TaskForm() {
             <input
               id="title"
               type="text"
-              value={task.title}
-              onChange={onChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter task title"
+              {...register("title", { required: true })}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
+            {errors.title&&<p className="text-red-500 text-sm">{errors.title.message}</p>}
           </div>
           {/* Description */}
           <div>
@@ -68,11 +69,11 @@ export default function TaskForm() {
             <textarea
               id="description"
               rows={3}
-              value={task.description}
-              onChange={onChange}
+              {...register("description")}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Describe the task"
             />
+            {errors.description&&<p className="text-red-500 text-sm">{errors.description.message}</p>}
           </div>
           {/* Status & Priority (two columns) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -85,8 +86,7 @@ export default function TaskForm() {
               </label>
               <select
                 id="status"
-                value={task.status}
-                onChange={onChange}
+                {...register("status")}
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
               >
                 <option value="todo">To Do</option>
@@ -103,8 +103,7 @@ export default function TaskForm() {
               </label>
               <select
                 id="priority"
-                value={task.priority}
-                onChange={onChange}
+                {...register("priority")}
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
               >
                 <option value="low">Low</option>
@@ -125,19 +124,16 @@ export default function TaskForm() {
               <input
                 id="dueDate"
                 type="date"
-                value={task.dueDate}
-                onChange={onChange}
+                {...register("dueDate")}
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+              {errors.dueDate&&<p className="text-red-500 text-sm">{errors.dueDate.message}</p>}
             </div>
             <div className="flex items-center space-x-3 pt-1">
               <input
                 id="completed"
                 type="checkbox"
-                checked={task.completed}
-                onChange={() =>
-                  setTask((prev) => ({ ...prev, completed: !prev.completed }))
-                }
+                {...register("completed")}
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <label
