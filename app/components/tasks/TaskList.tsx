@@ -9,7 +9,7 @@ import { useState } from "react";
 import { FileWarningIcon, Watch } from "lucide-react";
 
 export default function TaskList(): ReactElement {
-  const { tasks,loading,error, deleteTask, toggleCompletionTask } = useTask();
+  const { tasks, loading, error, deleteTask, toggleCompletionTask } = useTask();
 
   const [filter, setFilter] = useState("all");
   const changeFilter = (newFilter: string) => setFilter(newFilter);
@@ -22,14 +22,24 @@ export default function TaskList(): ReactElement {
     }
     return true;
   });
-  
-  if(loading){
-    return <div className="flex h-4 w-full bg-amber-200">
-      <h1 className="text-blue-600"><Watch/>Loading..........</h1>
-    </div>
+
+  if (loading) {
+    return (
+      <div className="flex h-4 w-full bg-amber-200">
+        <h1 className="text-blue-600">
+          <Watch />
+          Loading..........
+        </h1>
+      </div>
+    );
   }
-  if(error){
-    return <h1 className="text-red-600"><FileWarningIcon/>{error}</h1>
+  if (error) {
+    return (
+      <h1 className="text-red-600">
+        <FileWarningIcon />
+        {error}
+      </h1>
+    );
   }
   if (tasks.length === 0) {
     return <EmptyTask />;
@@ -37,7 +47,7 @@ export default function TaskList(): ReactElement {
   return (
     <div>
       <FilterButtons changeFilter={changeFilter} filter={filter} />
-      <div className=" grid   grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {filterTasks.map((task) => (
           <TaskCard
             key={task.id}

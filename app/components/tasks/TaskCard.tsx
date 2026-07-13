@@ -1,7 +1,7 @@
 'use client'
 import type { Task } from "@/app/types/task";
 import PriorityBadge from "@/app/components/ui/PriorityBadge";
-import StatusBadge from "@/app/components/tasks/StatusBadge";
+import StatusBadge from "@/app/components/ui/StatusBadge";
 import  Link  from "next/link";
 import { Pencil, Trash2 } from "lucide-react";
 import { Card,CardContent } from "@/components/ui/card";
@@ -22,9 +22,8 @@ export default function TaskCard({ task,onCompletionToggle, onDelete }: TaskCard
         <h2>{task.title}</h2>
         <p>{task.description}</p>
         <PriorityBadge priority={task.priority} />
-        <StatusBadge status={task.status} />
+        <StatusBadge completed={task.completed} />
         <div>{task.dueDate}</div>
-        <div>{task.completed?'task is completed':'task is incomplete'}</div>
         <button onClick={()=>onCompletionToggle(task.id)}>Toggle Completion</button>
         <hr/>
         <Link href={`/tasks/${task.id}`}>View</Link>

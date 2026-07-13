@@ -15,8 +15,14 @@ return data.todos.map((todo: TodoApi): Task => ({
     id: todo.id.toString(),
     title: todo.todo,
     description: "---",
-    status: todo.completed ? "done" : "todo",
     priority: "medium",
     completed: todo.completed,
 }));
+}
+
+export async function updateTaskApi(newTasks:Task[]) {
+     const response=await fetch("https://dummyjson.com/todos/sdss");
+      if(!response.ok){
+            throw new Error('Failed to fetch tasks');
+        }
 }
