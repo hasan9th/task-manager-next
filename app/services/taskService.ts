@@ -6,7 +6,7 @@ interface TodoApi {
     userId: number;
 }
 export async function getTasks():Promise<Task[]>{
-    const response=await fetch("https://dummyjson.com/todos/eee");
+    const response=await fetch("https://dummyjson.com/todos");
         if(!response.ok){
             throw new Error('Failed to fetch tasks');
         }
