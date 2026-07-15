@@ -10,7 +10,6 @@ import { FileWarningIcon, Watch } from "lucide-react";
 
 export default function TaskList(): ReactElement {
   const { tasks, loading, error, deleteTask, toggleCompletionTask } = useTask();
-
   const [filter, setFilter] = useState("all");
   const changeFilter = (newFilter: string) => setFilter(newFilter);
   const filterTasks = tasks.filter((task) => {

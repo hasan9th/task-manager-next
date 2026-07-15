@@ -19,8 +19,22 @@ return data.todos.map((todo: TodoApi): Task => ({
     completed: todo.completed,
 }));
 }
-
-export async function updateTaskApi(newTasks:Task[]) {
+export async function getTaskById(id:string):Promise<Task> {
+    const response=await fetch(`https://dummyjson.com/todos/${id}`);
+    if(!response.ok){
+        throw new Error("Task Fetch error....")
+    }
+    const todo=await response.json();
+    debugger;
+    return {
+            id: todo.id.toString(),
+    title: todo.todo,
+    description: "---",
+    priority: "medium",
+    completed: todo.completed,
+    };
+}
+export async function updateTaskApi(newTasks:Task) {
      const response=await fetch("https://dummyjson.com/todos/sdss");
       if(!response.ok){
             throw new Error('Failed to fetch tasks');

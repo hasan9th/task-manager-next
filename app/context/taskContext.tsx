@@ -38,22 +38,29 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   //Add Task
   const addTask = (newTask: Task): void =>
     setTasks((prev) => [...prev, newTask]);
+
   //Toggle completion
   async function toggleCompletionTask(id: string) {
-    const previousTasks = tasks;
-    const newTasks = tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task,
+    const task =tasks.find(task=>task.id === id);
+    if (!task) return
+    const updatedTask = {...task,completed:!task?.completed};
+    setTasks(prev=>
+      prev.map((prTask) =>
+        prTask.id === id ? updatedTask : prTask,
+      ),
     );
-    await updateTasks(newTasks, previousTasks);
-    setTasks(newTasks);
-  }
-  async function updateTasks(newTasks: Task[], previousTasks: Task[]) {
     try {
-      updateTaskApi(tasks);
+      await updateTaskApi(updatedTask);
     } catch (error) {
-      setTasks(previousTasks);
+      console.log("Update Error ...")
+          setTasks(prev=>
+      prev.map((prTask) =>
+        prTask.id === id ? task : prTask,
+      ),
+    );
     }
   }
+
   //delete task
   const deleteTask = (id: string): void =>
     setTasks((prev) => prev.filter((task) => task.id !== id));

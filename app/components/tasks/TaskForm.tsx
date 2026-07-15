@@ -1,11 +1,10 @@
 "use client";
-import { useTask } from "@/app/hooks/useTask";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 import { DialogFooter, DialogClose } from "@/components/ui/dialog";
-export default function TaskForm() {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, TaskFormData } from "@/app/schema/taskSchema";
@@ -27,9 +26,7 @@ export default function TaskForm() {
     },
   });
 
-  const { addTask } = useTask();
-
-  function onSubmit(data:TaskFormData) {
+  function onSubmit(data: TaskFormData) {
     console.log(data);
     console.log(errors);
     reset();
@@ -37,118 +34,120 @@ export default function TaskForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="">
-      <Card>
-        <CardHeader>New Task</CardHeader>
-        <CardContent>
-          {/* Title */}
+      <FieldGroup>
+        <Field>
+          <Label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Title
+          </Label>
+          <Input
+            id="title"
+            type="text"
+            placeholder="Enter task title"
+            {...register("title", { required: true })}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          {errors.title && (
+            <p className="text-red-500 text-sm">{errors.title.message}</p>
+          )}
+        </Field>
+        {/* Description */}
+        <Field>
+          <Label
+            htmlFor="dueDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Due Date
+          </Label>
+          <textarea 
+            id="description"
+            rows={3}
+            {...register("description")}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm">{errors.description.message}</p>
+          )}
+        </Field>
+        {/* Status & Priority (two columns) */}
+        <Field className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label
+            <Label
               htmlFor="status"
               className="block text-sm font-medium text-gray-700"
             >
               Status
-            </label>
-            <input
-              id="title"
-              type="text"
-              placeholder="Enter task title"
-              {...register("title", { required: true })}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            {errors.title&&<p className="text-red-500 text-sm">{errors.title.message}</p>}
+            </Label>
+            <select
+              id="status"
+              {...register("status")}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
           </div>
-          {/* Description */}
           <div>
-            <label
+            <Label
+              htmlFor="priority"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Priority
+            </Label>
+            <select
+              id="priority"
+              {...register("priority")}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </Field>
+        {/* Due Date & Completed (two columns) */}
+        <Field className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+          <div>
+            <Label
               htmlFor="dueDate"
               className="block text-sm font-medium text-gray-700"
             >
               Due Date
-            </label>
-            <textarea
-              id="description"
-              rows={3}
-              {...register("description")}
+            </Label>
+            <Input
+              id="dueDate"
+              type="date"
+              {...register("dueDate")}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-            {errors.description&&<p className="text-red-500 text-sm">{errors.description.message}</p>}
+            {errors.dueDate && (
+              <p className="text-red-500 text-sm">{errors.dueDate.message}</p>
+            )}
           </div>
-          {/* Status & Priority (two columns) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="status"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Status
-              </label>
-              <select
-                id="status"
-                {...register("status")}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="todo">To Do</option>
-                <option value="in_progress">In Progress</option>
-                <option value="done">Done</option>
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor="priority"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Priority
-              </label>
-              <select
-                id="priority"
-                {...register("priority")}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
+          <div className="flex items-center space-x-3 pt-1">
+            <input
+              id="completed"
+              type="checkbox"
+              {...register("completed")}
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <Label
+              htmlFor="completed"
+              className="text-sm font-medium text-gray-700"
+            >
+              Completed
+            </Label>
           </div>
-          {/* Due Date & Completed (two columns) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-            <div>
-              <label
-                htmlFor="dueDate"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Due Date
-              </label>
-              <input
-                id="dueDate"
-                type="date"
-                {...register("dueDate")}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              {errors.dueDate&&<p className="text-red-500 text-sm">{errors.dueDate.message}</p>}
-            </div>
-            <div className="flex items-center space-x-3 pt-1">
-              <input
-                id="completed"
-                type="checkbox"
-                {...register("completed")}
-                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label
-                htmlFor="completed"
-                className="text-sm font-medium text-gray-700"
-              >
-                Completed
-              </label>
-            </div>
-          </div>
-        </CardContent>
+        </Field>
+      </FieldGroup>
 
       <DialogFooter>
         <DialogClose render={<Button variant="outline">Cancel</Button>} />
-        <Button type="submit" >
-          Add Task
-        </Button>          </DialogFooter>
+        <Button type="submit">Add Task</Button>{" "}
+      </DialogFooter>
     </form>
   );
 }

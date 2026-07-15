@@ -26,7 +26,7 @@ export default function TaskCard({ task,onCompletionToggle, onDelete }: TaskCard
         <div>{task.dueDate}</div>
         <button onClick={()=>onCompletionToggle(task.id)}>Toggle Completion</button>
         <hr/>
-        <Link href={`/tasks/${task.id}`}>View</Link>
+        <Link href={`/task/${task.id}`}>View</Link>
       </CardContent>
     </Card>
   );

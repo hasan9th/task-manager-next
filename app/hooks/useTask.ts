@@ -1,6 +1,5 @@
 'use client'
 import { useContext } from "react";
-import type { Task } from "@/app/types/task";
 import { TasksContext } from "@/app/context/taskContext";
 
 export function useTask() {
