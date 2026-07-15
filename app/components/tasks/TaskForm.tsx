@@ -1,12 +1,11 @@
 "use client";
 import { useTask } from "@/app/hooks/useTask";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { DialogFooter, DialogClose } from "@/components/ui/dialog";
+export default function TaskForm() {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, TaskFormData } from "@/app/schema/taskSchema";
@@ -44,10 +43,10 @@ export default function TaskForm() {
           {/* Title */}
           <div>
             <label
-              htmlFor="title"
+              htmlFor="status"
               className="block text-sm font-medium text-gray-700"
             >
-              Title
+              Status
             </label>
             <input
               id="title"
@@ -61,17 +60,16 @@ export default function TaskForm() {
           {/* Description */}
           <div>
             <label
-              htmlFor="description"
+              htmlFor="dueDate"
               className="block text-sm font-medium text-gray-700"
             >
-              Description
+              Due Date
             </label>
             <textarea
               id="description"
               rows={3}
               {...register("description")}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Describe the task"
             />
             {errors.description&&<p className="text-red-500 text-sm">{errors.description.message}</p>}
           </div>
@@ -146,16 +144,11 @@ export default function TaskForm() {
           </div>
         </CardContent>
 
-        <CardFooter>
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Add Task
-          </Button>
-        </CardFooter>
-      </Card>
+      <DialogFooter>
+        <DialogClose render={<Button variant="outline">Cancel</Button>} />
+        <Button type="submit" >
+          Add Task
+        </Button>          </DialogFooter>
     </form>
   );
 }

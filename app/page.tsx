@@ -2,13 +2,46 @@ import TaskList from "@/app/components/tasks/TaskList";
 
 import TaskForm from "@/app/components/tasks/TaskForm";
 import { TasksProvider } from "./context/taskContext";
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+
+export function TaskFormDialog() {
+  return (
+    <Dialog>
+      <form>
+        <DialogTrigger render={<Button variant="outline">Add Task</Button>} />
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+                <TaskForm />
+
+     
+      
+        </DialogContent>
+      </form>
+    </Dialog>
+  )
+}
+
 export default function Dashboard() {
   return (
     <TasksProvider>
-      {/* <div className="relative top-0 left-0 w-full h-full bg-amber-200 bg-opacity-5 font-black text-3xl">
-        Loading...
-      </div> */}
-      <TaskForm />
+     <TaskFormDialog/>
       <TaskList />
     </TasksProvider>
   );
