@@ -1,6 +1,4 @@
 "use client";
-import type { Task } from "@/app/types/task";
-import { useState, type ChangeEvent } from "react";
 import { useTask } from "@/app/hooks/useTask";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field"
@@ -8,157 +6,143 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { DialogFooter, DialogClose } from "@/components/ui/dialog";
 export default function TaskForm() {
-  const { addTask } = useTask();
-  const [task, setTask] = useState<Task>({
-    id: "",
-    title: "",
-    description: "",
-    status: "todo",
-    priority: "medium",
-    dueDate: "",
-    completed: false,
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { taskSchema, TaskFormData } from "@/app/schema/taskSchema";
+export default function TaskForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<TaskFormData>({
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      status: "todo",
+      priority: "medium",
+      dueDate: "",
+      completed: false,
+    },
   });
 
-  function onChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) {
-    const { id, value } = e.target;
-    setTask((prev) => ({
-      ...prev,
-      id: Date.now().toString(),
-      [id]: value,
-    }));
-  }
+  const { addTask } = useTask();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    addTask(task);
+  function onSubmit(data:TaskFormData) {
+    console.log(data);
+    console.log(errors);
+    reset();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="">
-
-      <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
-        <FieldGroup >
-          <Field>
-            <Label htmlFor="name-1">Name</Label>
-            <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-          </Field>
-          <Field>
-            <Label htmlFor="username-1">Username</Label>
-            <Input id="username-1" name="username" defaultValue="@peduarte" />
-          </Field>
-        </FieldGroup>
-
-        <Field>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Title
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={task.title}
-            onChange={onChange}
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter task title"
-          />
-        </Field>
-        {/* Description */}
-        <Field>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
-            rows={3}
-            value={task.description}
-            onChange={onChange}
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Describe the task"
-          />
-        </Field>
-        {/* Status & Priority (two columns) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field>
+    <form onSubmit={handleSubmit(onSubmit)} className="">
+      <Card>
+        <CardHeader>New Task</CardHeader>
+        <CardContent>
+          {/* Title */}
+          <div>
             <label
               htmlFor="status"
               className="block text-sm font-medium text-gray-700"
             >
               Status
             </label>
-            <select
-              id="status"
-              value={task.status}
-              onChange={onChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="todo">To Do</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
-            </select>
-          </Field>
-          <Field>
-            <label
-              htmlFor="priority"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Priority
-            </label>
-            <select
-              id="priority"
-              value={task.priority}
-              onChange={onChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-          </Field>
-        </div>
-        {/* Due Date & Completed (two columns) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-          <Field>
+            <input
+              id="title"
+              type="text"
+              placeholder="Enter task title"
+              {...register("title", { required: true })}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {errors.title&&<p className="text-red-500 text-sm">{errors.title.message}</p>}
+          </div>
+          {/* Description */}
+          <div>
             <label
               htmlFor="dueDate"
               className="block text-sm font-medium text-gray-700"
             >
               Due Date
             </label>
-            <input
-              id="dueDate"
-              type="date"
-              value={task.dueDate}
-              onChange={onChange}
+            <textarea
+              id="description"
+              rows={3}
+              {...register("description")}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-          </Field>
-          <Field >
-            <input
-              id="completed"
-              type="checkbox"
-              checked={task.completed}
-              onChange={() =>
-                setTask((prev) => ({ ...prev, completed: !prev.completed }))
-              }
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label
-              htmlFor="completed"
-              className="text-sm font-medium text-gray-700"
-            >
-              Completed
-            </label>
-          </Field>
-        </div>
-      </div>
-      {/* Submit Button */}
+            {errors.description&&<p className="text-red-500 text-sm">{errors.description.message}</p>}
+          </div>
+          {/* Status & Priority (two columns) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="status"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Status
+              </label>
+              <select
+                id="status"
+                {...register("status")}
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              >
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="priority"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Priority
+              </label>
+              <select
+                id="priority"
+                {...register("priority")}
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+          {/* Due Date & Completed (two columns) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+            <div>
+              <label
+                htmlFor="dueDate"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Due Date
+              </label>
+              <input
+                id="dueDate"
+                type="date"
+                {...register("dueDate")}
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              {errors.dueDate&&<p className="text-red-500 text-sm">{errors.dueDate.message}</p>}
+            </div>
+            <div className="flex items-center space-x-3 pt-1">
+              <input
+                id="completed"
+                type="checkbox"
+                {...register("completed")}
+                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label
+                htmlFor="completed"
+                className="text-sm font-medium text-gray-700"
+              >
+                Completed
+              </label>
+            </div>
+          </div>
+        </CardContent>
 
       <DialogFooter>
         <DialogClose render={<Button variant="outline">Cancel</Button>} />
