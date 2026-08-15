@@ -1,8 +1,11 @@
-import express from "express"
-const app=express();
+import express from "express";
+import {taskRouter} from './routes/taskRoutes.js'
+const app = express();
 
-const PORT=3001;
-
-app.get("/",(req,res)=>{res.json({message:"This is a message from server"});
+const PORT = 3001;
+app.use(express.json())
+app.use('/tasks',taskRouter)
+app.use((req,res)=>res.json({    message: "TaskFlow API",}))
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
-app.listen(PORT,()=>{console.log(`Server is running on http://localhost:${PORT}`)});
