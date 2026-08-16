@@ -31,6 +31,9 @@ export function getAllTasks():Task[] {
   return  tasks;
 
 }
+export function getATask(id:string):Task|undefined{
+  return tasks.find((task)=>task.id===`task_${id}`)
+}
 export function createTask(title:string):Task{
   console.log("service start")
   const newTask:Task={
