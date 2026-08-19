@@ -20,8 +20,6 @@ res.json({
 }
 export const createTask=(req:Request,res:Response)=>{
   const result=createTaskSchema.safeParse(req.body);
-  console.log(result)
-
   if(!result.success){
     return res.status(400).json({message:"Data was invalid",error:result.error.issues})
   }
