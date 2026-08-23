@@ -5,7 +5,7 @@ export const createTaskSchema = z.object({
 });
 export const updateTaskSchema=z.object(
   {
-    title:z.string().min(3),
-    completed:z.boolean(),
+    title:z.string().min(3).max(100).optional(),
+    completed:z.boolean().optional(),
   }
-)
+).refine((data)=>data.title!==undefined||data.completed!==undefined,{message:"At least one field must be provided"})

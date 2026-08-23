@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { Cabin, Ubuntu, Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/app/components/layout/Sidebar";
 import Header from "@/app/components/layout/Header";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
-const CabinFont = Cabin({
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,7 +19,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("text-xl", "h-full", "antialiased", CabinFont.className, "font-sans", inter.variable)}
+      className={cn("text-xl", "h-full", "antialiased", "font-sans")}
     >
       <body className="min-h-full flex flex-col">
         <div style={{ display: "flex", height: "100vh" }}>
