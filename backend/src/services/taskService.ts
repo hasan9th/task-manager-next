@@ -32,7 +32,7 @@ export function getAllTasks(): Task[] {
   return tasks;
 }
 export function getATask(id: string): Task | undefined {
-  return tasks.find((task) => task.id === `task_${id}`);
+  return tasks.find((task) => task.id === id);
 }
 export function createTask(title: string): Task {
   console.log("service start");
@@ -51,19 +51,19 @@ export function createTask(title: string): Task {
 }
 export function updateTask(
   id: string,
-  title: string,
-  completed: boolean,
+  title: string|undefined,
+  completed: boolean|undefined,
 ): Task | null {
-  const task = tasks.find((task) => task.id === `task_` + id);
+  const task = tasks.find((task) => task.id === id);
   if (!task) {
     return null;
   }
-  task.title = title;
-  task.completed = completed;
+  if(title!==undefined)task.title = title;
+  if(completed!==undefined)task.completed = completed;
   return task;
 }
 export function removeTask(id: string): boolean {
-  const taskIndex = tasks.findIndex((task) => task.id === `task_` + id);
+  const taskIndex = tasks.findIndex((task) => task.id === id);
   if (taskIndex === -1) {
     return false;
   }
