@@ -16,6 +16,7 @@ export const getATask = (req: Request, res: Response) => {
   if (!task) {
     res.status(404).json({ message: "Task not found" });
   }
+<<<<<<< HEAD
   res.status(200).json(task);
 };
 export const getAbout = (req: Request, res: Response) => {
@@ -31,6 +32,19 @@ export const createTask = (req: Request, res: Response) => {
     return res
       .status(400)
       .json({ message: "Data was invalid", error: result.error.issues });
+=======
+  res.status(200).json(task)
+}
+export const getAbout=(req:Request,res:Response)=>{
+res.json({
+  "message": "Task endpoints"
+})
+}
+export const createTask=(req:Request,res:Response)=>{
+  const result=createTaskSchema.safeParse(req.body);
+  if(!result.success){
+    return res.status(400).json({message:"Data was invalid",error:result.error.issues})
+>>>>>>> feature/middleware
   }
   const { title } = result.data;
   const nt = createTaskService(title);
