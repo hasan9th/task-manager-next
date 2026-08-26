@@ -23,7 +23,6 @@ export default function TaskCard({ task,onCompletionToggle, onDelete }: TaskCard
         <p>{task.description}</p>
         <PriorityBadge priority={task.priority} />
         <StatusBadge completed={task.completed} />
-        <div>{task.dueDate}</div>
         <button onClick={()=>onCompletionToggle(task.id)}>Toggle Completion</button>
         <hr/>
         <Link href={`/task/${task.id}`}>View</Link>

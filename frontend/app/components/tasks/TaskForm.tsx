@@ -19,10 +19,8 @@ export default function TaskForm() {
     defaultValues: {
       title: "",
       description: "",
-      status: "todo",
       priority: "medium",
-      dueDate: "",
-      completed: false,
+      completed:false
     },
   });
 
@@ -59,7 +57,7 @@ export default function TaskForm() {
             htmlFor="dueDate"
             className="block text-sm font-medium text-gray-700"
           >
-            Due Date
+            Description
           </Label>
           <textarea 
             id="description"
@@ -73,29 +71,13 @@ export default function TaskForm() {
         </Field>
         {/* Status & Priority (two columns) */}
         <Field className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <Label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Status
-            </Label>
-            <select
-              id="status"
-              {...register("status")}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="todo">To Do</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
-            </select>
-          </div>
+        
           <div>
             <Label
               htmlFor="priority"
               className="block text-sm font-medium text-gray-700"
             >
-              Priority
+              Priorities
             </Label>
             <select
               id="priority"
@@ -108,40 +90,7 @@ export default function TaskForm() {
             </select>
           </div>
         </Field>
-        {/* Due Date & Completed (two columns) */}
-        <Field className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-          <div>
-            <Label
-              htmlFor="dueDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Due Date
-            </Label>
-            <Input
-              id="dueDate"
-              type="date"
-              {...register("dueDate")}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            {errors.dueDate && (
-              <p className="text-red-500 text-sm">{errors.dueDate.message}</p>
-            )}
-          </div>
-          <div className="flex items-center space-x-3 pt-1">
-            <input
-              id="completed"
-              type="checkbox"
-              {...register("completed")}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <Label
-              htmlFor="completed"
-              className="text-sm font-medium text-gray-700"
-            >
-              Completed
-            </Label>
-          </div>
-        </Field>
+     
       </FieldGroup>
 
       <DialogFooter>

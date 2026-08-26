@@ -12,6 +12,7 @@ export default function TaskList(): ReactElement {
   const { tasks, loading, error, deleteTask, toggleCompletionTask } = useTask();
   const [filter, setFilter] = useState("all");
   const changeFilter = (newFilter: string) => setFilter(newFilter);
+  console.log(tasks)
   const filterTasks = tasks.filter((task) => {
     if (filter === "completed") {
       return task.completed;
