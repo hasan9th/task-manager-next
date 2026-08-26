@@ -3,13 +3,11 @@ import cors from "cors";
 import {taskRouter} from './routes/taskRoutes.js'
 import { logger } from "./middleware/logger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+
 const app = express();
 const PORT = 3001;
-<<<<<<< HEAD
 app.use(cors())
-=======
 app.use(logger)
->>>>>>> feature/middleware
 app.use(express.json())
 app.use('/tasks',taskRouter)
 app.get('/error-test',(req,res,next)=>{next(new Error("xxxxx"))})

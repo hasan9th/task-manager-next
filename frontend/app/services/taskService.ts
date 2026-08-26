@@ -2,7 +2,9 @@ import { Task } from "../types/task";
 interface TaskApi {
   id: number;
   title: string;
+  description:string;
   completed: boolean;
+  priority:"low"|"medium"|"high";
   userId: number;
 }
 export async function getTasks(): Promise<Task[]> {
@@ -15,14 +17,15 @@ export async function getTasks(): Promise<Task[]> {
     (task: TaskApi): Task => ({
       id: task.id.toString(),
       title: task.title,
-      description: "---",
-      priority: "medium",
+      description:task.description,
+      priority: task.priority,
       completed: task.completed,
     }),
   );
 }
 export async function getTaskById(id: string): Promise<Task> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${id}`);
+  console.log(response)
   if (!response.ok) {
     throw new Error("Task Fetch error....");
   }
@@ -40,4 +43,6 @@ export async function updateTaskApi(newTasks: Task) {
   if (!response.ok) {
     throw new Error("Failed to fetch tasks");
   }
+}
+export async function createTask(newTask:Task) {
 }

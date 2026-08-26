@@ -7,7 +7,6 @@ export default async function TaskDetails({
 }) {
   const { taskId } = await params;
 
-  console.log(taskId);
 
   const task = await getTaskById(taskId);
 
@@ -16,14 +15,12 @@ export default async function TaskDetails({
   }
   return (
     <div>
-      <h1>{taskId}</h1>
+      <h1>id:{taskId}</h1>
 
       <p>
         <strong>Title:</strong> {task.title}
       </p>
-      <p>
-        <strong>DueDate:</strong> {task.dueDate}
-      </p>
+    
       <p>
         <strong>Description:</strong> {task.description}
       </p>

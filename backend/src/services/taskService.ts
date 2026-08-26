@@ -1,4 +1,10 @@
 import { Task } from "../types/tasks.js";
+import {
+  getAllTask as getAllTaskRepository,
+  getATask as getATaskRepository,
+  createTask as createTaskRepository,
+  updateTask as updateTaskRepository
+} from "../repositories/task.repository.js";
 var tasks: Task[] = [
   {
     id: "task_0",
@@ -28,41 +34,23 @@ var tasks: Task[] = [
     completed: false,
   },
 ];
-export function getAllTasks(): Task[] {
-  return tasks;
+export async function getAllTasks(): Promise<Task[]> {
+  return getAllTaskRepository();
 }
-export function getATask(id: string): Task | undefined {
-  return tasks.find((task) => task.id === id);
+export async function getATask(id: string): Promise<Task | undefined> {
+  return getATaskRepository(id);
 }
-export function createTask(title: string): Task {
-  console.log("service start");
-  const newTask: Task = {
-    id: "task_" + (tasks.length + 1),
-    title: title,
-    description:
-      "Coordinate catering and book conference room for Friday's team-building event",
-    priority: "low",
-    dueDate: "2026-08-22",
-    completed: false,
-  };
-  tasks.push(newTask);
-  console.log("service start" + newTask);
-  return newTask;
+export async function createTask(title: string) {
+  return createTaskRepository(title);
 }
-export function updateTask(
-  id: string,
-  title: string|undefined,
-  completed: boolean|undefined,
-): Task | null {
-  const task = tasks.find((task) => task.id === id);
-  if (!task) {
-    return null;
-  }
-  if(title!==undefined)task.title = title;
-  if(completed!==undefined)task.completed = completed;
-  return task;
+export async function updateTask(
+  id: number,
+  title: string | undefined,
+  completed: boolean | undefined,
+): Promise<Task | null> {
+return updateTaskRepository(id,title,completed)
 }
-export function removeTask(id: string): boolean {
+export function removeTask(id: number): boolean {
   const taskIndex = tasks.findIndex((task) => task.id === id);
   if (taskIndex === -1) {
     return false;

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   getAllTasks,
   getATask as getATaskService,
@@ -7,72 +7,95 @@ import {
   removeTask as removeTaskService,
 } from "../services/taskService.js";
 import { createTaskSchema, updateTaskSchema } from "../schema/taskSchema.js";
-export const getTasks = (req: Request, res: Response) => {
-  const tasks = getAllTasks();
-  res.json(tasks);
-};
-export const getATask = (req: Request, res: Response) => {
-  const task = getATaskService(req.params.id.toString());
-  if (!task) {
-    res.status(404).json({ message: "Task not found" });
+export const getTasks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const tasks = await getAllTasks();
+    res.json(tasks);
+  } catch (err) {
+    next(err);
   }
-<<<<<<< HEAD
-  res.status(200).json(task);
+};
+export const getATask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const task = await getATaskService(req.params.id.toString());
+    if (!task) {
+      res.status(404).json({ message: "Task not found" });
+    }
+    res.status(200).json(task);
+  } catch (err) {
+    next(err);
+  }
 };
 export const getAbout = (req: Request, res: Response) => {
   res.json({
     message: "Task endpoints",
   });
 };
-export const createTask = (req: Request, res: Response) => {
-  const result = createTaskSchema.safeParse(req.body);
-  console.log(result);
-
-  if (!result.success) {
-    return res
-      .status(400)
-      .json({ message: "Data was invalid", error: result.error.issues });
-=======
-  res.status(200).json(task)
-}
-export const getAbout=(req:Request,res:Response)=>{
-res.json({
-  "message": "Task endpoints"
-})
-}
-export const createTask=(req:Request,res:Response)=>{
-  const result=createTaskSchema.safeParse(req.body);
-  if(!result.success){
-    return res.status(400).json({message:"Data was invalid",error:result.error.issues})
->>>>>>> feature/middleware
+export const createTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = createTaskSchema.safeParse(req.body);
+    if (!result.success) {
+      return res
+        .status(400)
+        .json({ message: "Data was invalid", error: result.error.issues });
+    }
+    const { title } = result.data;
+    const newTask = await createTaskService(title);
+    res.status(201).json(newTask);
+  } catch (err) {
+    next(err);
   }
-  const { title } = result.data;
-  const nt = createTaskService(title);
-  res.status(201).json(nt);
 };
-export const updateTask = (req: Request, res: Response) => {
-  const result = updateTaskSchema.safeParse(req.body);
-  const id = req.params.id.toString();
-  if (!result.success) {
-    return res
-      .status(400)
-      .json({ message: "Invalid data", error: result.error.issues });
+export const updateTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        message: "Invalid task ID",
+      });
+     
+    }
+    const result = updateTaskSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res
+        .status(400)
+        .json({ message: "Invalid data", error: result.error.issues });
+    }
+    const newTask = await updateTaskService(
+      id,
+      result.data.title,
+      result.data.completed,
+    );
+    if (!newTask) {
+      return res.status(404).json({ message: "Task not not found" });
+    }
+    res.json(newTask);
+  } catch (err) {
+    next(err);
   }
-  const newTask = updateTaskService(
-    id,
-    result.data.title,
-    result.data.completed,
-  );
-  if (!newTask) {
-    return res.status(404).json({ message: "Task not not found" });
-  }
-  res.json(newTask);
 };
 export const removeTask = (req: Request, res: Response) => {
-  const id  = req.params.id.toString();
-    const deleted = removeTaskService(id);
+  const id = Number(req.params.id);
+  const deleted = removeTaskService(id);
 
-    if (!deleted) {
+  if (!deleted) {
     return res.status(404).json({
       message: "Task not found",
     });

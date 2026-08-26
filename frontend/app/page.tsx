@@ -17,7 +17,7 @@ export function TaskFormDialog() {
   return (
     <Dialog>
       <form>
-        <DialogTrigger render={<Button variant="outline">Add Task</Button>} />
+        <DialogTrigger render={<Button variant="outline">Add new Task</Button>} />
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
