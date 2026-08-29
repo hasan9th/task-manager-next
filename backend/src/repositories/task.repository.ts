@@ -1,63 +1,96 @@
-import { push } from "node:stream/iter";
 import pool from "../db/pool.js";
-import { Task } from "../types/tasks.js";
+import { CreateTaskInput, UpdateTaskInput } from "../schema/taskSchema.js";
+import {
+  mapTaskRowToTask,
+  Task,
+  TaskRow,
+  TaskSummary,
+  TaskPriority,
+} from "../types/tasks.js";
 
 export async function getAllTask(): Promise<Task[]> {
-  const result = await pool.query<Task>(
-    "SELECT id,title,completed,description,priority FROM tasks ORDER BY id ASC",
+  const result = await pool.query<TaskRow>(
+    "SELECT id,title,completed,description,priority,due_date,created_at FROM tasks ORDER BY id ASC",
   );
-  return result.rows;
+  return result.rows.map(mapTaskRowToTask);
 }
 export async function getATask(id: string): Promise<Task> {
-  const result = await pool.query<Task>(
-    "SELECT id,title,completed FROM tasks WHERE ID=$1",
+  const result = await pool.query<TaskRow>(
+    "SELECT id,title,completed,description,priority,due_date,created_at FROM tasks WHERE ID=$1",
     [id],
   );
-  return result.rows[0];
+  return mapTaskRowToTask(result.rows[0]);
 }
 
-export async function createTask(title: string) {
-  const result = await pool.query(
+export async function createTask(data: CreateTaskInput): Promise<Task> {
+  const result = await pool.query<TaskRow>(
     `
-      INSERT INTO tasks (title)
-      VALUES ($1)
-      RETURNING id,title,completed,created_at
+      INSERT INTO tasks (title,description,priority,due_date)
+      VALUES ($1,$2,$3,$4)
+      RETURNING 
+        id,
+        title,
+        description,
+        priority,
+        due_date,
+        completed,
+        created_at
     `,
-    [title],
+    [data.title, data.description, data.priority, data.dueDate],
   );
-  return result.rows[0];
+  return mapTaskRowToTask(result.rows[0]);
 }
 
 export async function updateTask(
   id: number,
-  title: string | undefined,
-  completed: boolean | undefined,
+  data: UpdateTaskInput,
 ): Promise<Task | null> {
+  const { title, description, priority, completed,dueDate } = data;
   const fields: string[] = [];
   const values: unknown[] = [];
 
   if (title !== undefined) {
-    fields.push("title=$" + values.length + 1);
+    fields.push(`title=$${values.length + 1}`);
     values.push(title);
   }
   if (completed !== undefined) {
-    fields.push("completed=$" + values.length + 1);
+    fields.push(`completed=$${values.length + 1}`);
     values.push(completed);
   }
-
+  if (description !== undefined) {
+    fields.push(`description=$${values.length + 1}`);
+    values.push(description);
+  }
+  if (priority !== undefined) {
+    fields.push(`priority=$${values.length + 1}`);
+    values.push(priority);
+  }
+    if (dueDate !== undefined) {
+    fields.push(`due_date=$${values.length + 1}`);
+    values.push(dueDate);
+  }
   if (fields.length === 0) {
     return null;
   }
+
   values.push(id);
-
-  console.log(
-    `UPDATE tasks SET ${fields.join(", ")} where id=$${values.length} RETURN id,title,completed,description`,
+  const result = await pool.query<TaskRow>(
+    `UPDATE tasks SET ${fields.join(", ")} where id=$${values.length} RETURNING id,title,completed,description,priority,due_date,created_at`,
     values,
   );
-  const result = await pool.query<Task>(
-    `UPDATE tasks SET ${fields.join(", ")} where id=$${values.length} RETURNING id,title,completed,description`,
-    values,
-  );
+  const row=result.rows[0]
+  return row ?mapTaskRowToTask(row) : null;
+}
 
-  return result?.rows[0] ?? null;
+export async function removeTask(id: number): Promise<Task | null> {
+  const result = await pool.query<TaskRow>(
+    `
+    DELETE FROM tasks
+     WHERE id=$1
+     RETURNING id,title,completed,description,priority,due_date,created_at
+     `,
+    [id],
+  );
+   const row=result.rows[0]
+  return row ? mapTaskRowToTask(row) : null;
 }

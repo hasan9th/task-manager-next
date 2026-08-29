@@ -51,8 +51,7 @@ export const createTask = async (
         .status(400)
         .json({ message: "Data was invalid", error: result.error.issues });
     }
-    const { title } = result.data;
-    const newTask = await createTaskService(title);
+    const newTask = await createTaskService(result.data);
     res.status(201).json(newTask);
   } catch (err) {
     next(err);
@@ -69,7 +68,6 @@ export const updateTask = async (
       return res.status(400).json({
         message: "Invalid task ID",
       });
-     
     }
     const result = updateTaskSchema.safeParse(req.body);
 
@@ -78,11 +76,7 @@ export const updateTask = async (
         .status(400)
         .json({ message: "Invalid data", error: result.error.issues });
     }
-    const newTask = await updateTaskService(
-      id,
-      result.data.title,
-      result.data.completed,
-    );
+    const newTask = await updateTaskService(id,result.data);
     if (!newTask) {
       return res.status(404).json({ message: "Task not not found" });
     }
@@ -91,15 +85,25 @@ export const updateTask = async (
     next(err);
   }
 };
-export const removeTask = (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const deleted = removeTaskService(id);
+export const removeTask = async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = Number(req.params.id);
 
-  if (!deleted) {
-    return res.status(404).json({
-      message: "Task not found",
-    });
+    if (!Number.isInteger(id) || id <= 0) {
+      res.status(400).json({
+        message: "Invalid task ID",
+      });
+      return;
+    }
+    const deleted =await removeTaskService(id);
+    if (!deleted) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
+    console.log(deleted)
+    return res.status(204).json({ message: "Task deleted successfully",deleted});
+  } catch (error) {
+    next(error);
   }
-
-  return res.status(204).send();
 };
