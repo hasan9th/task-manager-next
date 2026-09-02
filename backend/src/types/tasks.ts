@@ -13,20 +13,31 @@ export interface TaskRow {
   id: number;
   title: string;
   description: string;
-  priority: TaskPriority;
+  priority: string;
   due_date: string | null;
   completed: boolean;
-  created_at: Date;
+  created_at: string;
+}
+function mapPriority(priority: string): TaskPriority {
+  if (
+    priority === "low" ||
+    priority === "medium" ||
+    priority === "high"
+  ) {
+    return priority;
+  }
+
+  throw new Error(`Invalid task priority: ${priority}`);
 }
 export function mapTaskRowToTask(row: TaskRow): Task {
   return {
     id: row.id,
     title: row.title,
     description: row.description,
-    priority: row.priority,
-    dueDate: row.due_date,
+    priority: mapPriority(row.priority),
+    dueDate: row.due_date??null,
     completed: row.completed,
-    createdAt: row.created_at.toISOString(),
+    createdAt: row.created_at,
   };
 }
 export type TaskSummary=Pick<Task,"id"|"title">;
