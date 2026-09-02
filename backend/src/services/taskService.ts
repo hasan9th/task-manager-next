@@ -8,18 +8,20 @@ import {
 } from "../repositories/task.repository.js";
 import { CreateTaskInput, UpdateTaskInput } from "../schema/taskSchema.js";
 
-export async function getAllTasks(): Promise<Task[]> {
+export async function getAllTasks(): Promise<Task[]|null> {
   return getAllTaskRepository();
 }
-export async function getATask(id: string): Promise<Task | undefined> {
+export async function getATask(id: number): Promise<Task | null> {
   return getATaskRepository(id);
 }
 export async function createTask(data:CreateTaskInput) {
+  console.log(data)
   return createTaskRepository({
     title: data.title,
     description: data.description,
     priority: data.priority,
     dueDate: data.dueDate ?? null,
+    userId:data.userId
   });
 }
 export async function updateTask(id:number,data:UpdateTaskInput): Promise<Task | null> {

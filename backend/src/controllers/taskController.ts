@@ -25,7 +25,7 @@ export const getATask = async (
   next: NextFunction,
 ) => {
   try {
-    const task = await getATaskService(req.params.id.toString());
+    const task = await getATaskService(Number(req.params.id));
     if (!task) {
       res.status(404).json({ message: "Task not found" });
     }
@@ -45,7 +45,9 @@ export const createTask = async (
   next: NextFunction,
 ) => {
   try {
+      console.log(req.body)
     const result = createTaskSchema.safeParse(req.body);
+  
     if (!result.success) {
       return res
         .status(400)

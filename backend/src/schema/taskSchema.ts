@@ -5,6 +5,7 @@ export const createTaskSchema = z.object({
   description:z.string().max(200).trim(),
   priority:z.enum(["low", "medium", "high"]),
    dueDate: z.string().date().nullable().optional(),
+   userId:z.number()
 
 });
 export type CreateTaskInput=z.infer<typeof createTaskSchema>;

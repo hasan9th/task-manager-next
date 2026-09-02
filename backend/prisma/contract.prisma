@@ -1,0 +1,37 @@
+// use prisma-next
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+namespace public {
+  model Users {
+    id           Int       @id(map: "users_pkey") @default(autoincrement())
+    name         String
+    email        String    @unique(map: "users_email_key")
+    passwordHash String    @map("password_hash")
+    createdAt    Timestamp @default(now()) @map("created_at")
+    tasks        Tasks[]
+
+    @@map("users")
+  }
+
+  model Tasks {
+    id          Int         @id(map: "tasks_pkey") @default(autoincrement())
+    title       String
+    completed   Boolean     @default(false)
+    createdAt   Timestamp   @default(now()) @map("created_at")
+    description String      @default("")
+    priority    VarChar(10) @default("medium")
+    dueDate     Date?       @map("due_date")
+    userId      Int         @map("user_id")
+    user        Users       @relation(fields: [userId], references: [id], onDelete: Cascade, map: "tasks_user_id_fkey", index: false)
+
+    @@check(expression: "((priority)::text = ANY ((ARRAY['low'::character varying, 'medium'::character varying, 'high'::character varying])::text[]))", map: "tasks_priority_check")
+    @@map("tasks")
+  }
+
+  native_enum PriorityLevel {
+    low = "low"
+    medium = "medium"
+    high = "high"
+    @@map("priority_level")
+  }
+}
