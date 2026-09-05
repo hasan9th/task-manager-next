@@ -11,9 +11,6 @@ async function main() {
     .build();
 
   const rows = await db.runtime().query(plan);
-
-  console.log(rows);
-
   await runtime.close();
 }
 
