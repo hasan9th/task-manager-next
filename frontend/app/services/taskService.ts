@@ -23,9 +23,8 @@ export async function getTasks(): Promise<Task[]> {
     }),
   );
 }
-export async function getTaskById(id: string): Promise<Task> {
+export async function getTaskById(id: number): Promise<Task> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${id}`);
-  console.log(response)
   if (!response.ok) {
     throw new Error("Task Fetch error....");
   }
@@ -38,11 +37,18 @@ export async function getTaskById(id: string): Promise<Task> {
     completed: task.completed,
   };
 }
-export async function updateTaskApi(newTasks: Task) {
-  const response = await fetch("https://dummyjson.com/todos/sdss");
+export async function updateTaskApi(newTask: Task) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${newTask.id}`,{method:"PATCH",headers:{ "Content-Type": "application/json",body:JSON.stringify(newTask)}});
   if (!response.ok) {
     throw new Error("Failed to fetch tasks");
   }
 }
 export async function createTask(newTask:Task) {
+}
+export async function deleteTask(id:number):Promise<void> {
+  const response=await fetch (`${process.env.NEXT_PUBLIC_API_URL}/tasks/${id}`,{method:"DELETE"},);
+  if(!response.ok){
+    throw new Error("Task delete error....")
+  }
+
 }

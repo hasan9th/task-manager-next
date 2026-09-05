@@ -8,7 +8,7 @@ export default async function TaskDetails({
   const { taskId } = await params;
 
 
-  const task = await getTaskById(taskId);
+  const task = await getTaskById(Number(taskId));
 
   if (!task) {
     notFound();

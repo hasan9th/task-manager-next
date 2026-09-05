@@ -1,8 +1,7 @@
 "use client";
 import type { Task } from "@/app/types/task";
 import { createContext, useState, useEffect } from "react";
-import { getTasks } from "@/app/services/taskService";
-import { updateTaskApi } from "@/app/services/taskService";
+import { updateTaskApi,getTasks,deleteTask as deleteTaskApi } from "@/app/services/taskService";
 
 export interface TaskContextType {
   tasks: Task[];
@@ -44,6 +43,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     const task =tasks.find(task=>task.id === id);
     if (!task) return
     const updatedTask = {...task,completed:!task?.completed};
+    
     setTasks(prev=>
       prev.map((prTask) =>
         prTask.id === id ? updatedTask : prTask,
@@ -62,9 +62,16 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   }
 
   //delete task
-  const deleteTask = (id: string): void =>
-    setTasks((prev) => prev.filter((task) => task.id !== id));
-
+  const deleteTask = async(id: string): Promise<void> =>{
+    try {console.log("service init")
+          await deleteTaskApi(Number(id));
+          console.log("promise success")
+          setTasks((prev) =>
+      prev.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error("Delete Error",error)
+    }
+  }
   return (
     <TasksContext.Provider
       value={{
