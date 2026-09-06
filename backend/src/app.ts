@@ -7,8 +7,8 @@ import { errorHandler } from "./middleware/errorHandler.js";
 const app = express();
 const PORT = 3001;
 app.use(cors())
-app.use(logger)
 app.use(express.json())
+app.use(logger)
 app.use('/tasks',taskRouter)
 app.get('/error-test',(req,res,next)=>{next(new Error("xxxxx"))})
 app.use((req,res)=>res.json({    message: "TaskFlow API",}))

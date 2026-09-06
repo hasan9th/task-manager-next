@@ -1,6 +1,6 @@
 type TaskPriority="low"|"medium"|"high";
 export interface Task{
-    id:string;
+    id:number;
     title:string;
     description:string;
     priority:TaskPriority;

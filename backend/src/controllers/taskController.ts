@@ -45,9 +45,7 @@ export const createTask = async (
   next: NextFunction,
 ) => {
   try {
-      console.log(req.body)
     const result = createTaskSchema.safeParse(req.body);
-  
     if (!result.success) {
       return res
         .status(400)

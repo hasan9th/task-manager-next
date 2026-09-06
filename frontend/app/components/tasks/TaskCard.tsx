@@ -7,8 +7,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Card,CardContent } from "@/components/ui/card";
 interface TaskCardProps {
   task: Task;
-  onDelete: (id: string) => void;
-    onCompletionToggle:(id:string)=>void
+  onDelete: (id: number) => void;
+    onCompletionToggle:(id:number)=>void
 }
 export default function TaskCard({ task,onCompletionToggle, onDelete }: TaskCardProps) {
 

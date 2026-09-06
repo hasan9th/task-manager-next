@@ -8,7 +8,10 @@ import { DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, TaskFormData } from "@/app/schema/taskSchema";
+import { useTask } from "@/app/hooks/useTask";
 export default function TaskForm() {
+  const { addTask } = useTask();
+
   const {
     register,
     handleSubmit,
@@ -20,13 +23,14 @@ export default function TaskForm() {
       title: "",
       description: "",
       priority: "medium",
-      completed:false
+      completed: false,
+      userId:1
     },
   });
 
   function onSubmit(data: TaskFormData) {
-    console.log(data);
-    console.log(errors);
+    console.log("data submitted")
+    addTask(data);
     reset();
   }
 
@@ -59,7 +63,7 @@ export default function TaskForm() {
           >
             Description
           </Label>
-          <textarea 
+          <textarea
             id="description"
             rows={3}
             {...register("description")}
@@ -70,8 +74,7 @@ export default function TaskForm() {
           )}
         </Field>
         {/* Status & Priority (two columns) */}
-        <Field className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        
+        <Field className="grid grid-cols-2 sm:grid-cols-2 gap-4">
           <div>
             <Label
               htmlFor="priority"
@@ -89,8 +92,26 @@ export default function TaskForm() {
               <option value="high">High</option>
             </select>
           </div>
+              <div>
+            <Label
+              htmlFor="userId"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Users
+            </Label>
+            <select
+              id="userId"
+              {...register("userId",{valueAsNumber:true})}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="1">hasan</option>
+              <option value="2">ali</option>
+              <option value="3">ehsan</option>
+            </select>
+            {errors.userId&&(<p className="text-red-500 text-sm">{errors.userId.message}</p>)}
+          </div>
         </Field>
-     
+
       </FieldGroup>
 
       <DialogFooter>
