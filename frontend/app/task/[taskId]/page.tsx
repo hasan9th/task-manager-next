@@ -27,6 +27,9 @@ export default async function TaskDetails({
       <p>
         <strong>Priority:</strong> {task.priority}
       </p>
+            <p>
+        <strong>due date:</strong> {task.dueDate}
+      </p>
     </div>
   );
 }

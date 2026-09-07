@@ -26,7 +26,7 @@ export function TaskFormDialog() {
               done.
             </DialogDescription>
           </DialogHeader>
-                <TaskForm />
+                <TaskForm task={null}/>
 
      
       

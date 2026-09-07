@@ -4,6 +4,6 @@ export interface Task{
     title:string;
     description:string;
     priority:TaskPriority;
-    completed:boolean
-
+    completed:boolean;
+    dueDate:string|null;
 }

@@ -9,12 +9,11 @@ export const taskSchema = z.object({
 
   priority: z.enum(["low", "medium", "high"]),
 userId:z.number(),
-  // dueDate: z.string().min(1,"Due date is required").refine((date)=>{
-  //   const today=new Date();
-  //   today.setHours(0,0,0,0);
-    
-  //   return new Date(date)>=today
-  // },"Due date cannot be in the past"),
+  dueDate: z.string().min(1,"Due date is required").refine((date)=>{
+    const today=new Date();
+    today.setHours(0,0,0,0);
+    return new Date(date)>=today
+  },"Due date cannot be in the past").nullable(),
 
   completed: z.boolean(),
 });

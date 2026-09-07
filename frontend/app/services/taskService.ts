@@ -7,6 +7,7 @@ interface TaskApi {
   completed: boolean;
   priority: "low" | "medium" | "high";
   userId: number;
+  dueDate:string|null;
 }
 export async function getTasks(): Promise<Task[]> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks`);
@@ -21,6 +22,7 @@ export async function getTasks(): Promise<Task[]> {
       description: task.description,
       priority: task.priority,
       completed: task.completed,
+      dueDate:task.dueDate
     }),
   );
 }
@@ -38,6 +40,7 @@ export async function getTaskById(id: number): Promise<Task> {
     description: "---",
     priority: "medium",
     completed: task.completed,
+    dueDate:task.dueDate
   };
 }
 export async function updateTaskApi(data: Partial<Task>,id:number) {
