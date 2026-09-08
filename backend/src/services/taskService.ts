@@ -15,7 +15,6 @@ export async function getATask(id: number): Promise<Task | null> {
   return getATaskRepository(id);
 }
 export async function createTask(data:CreateTaskInput) {
-  console.log(data)
   return createTaskRepository({
     title: data.title,
     description: data.description,

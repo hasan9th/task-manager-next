@@ -1,4 +1,4 @@
-import {z} from "zod";
+import {number, z} from "zod";
 export const taskSchema = z.object({
   title: z
     .string()
@@ -8,13 +8,12 @@ export const taskSchema = z.object({
   description: z.string().min(5,"Description must be at least 5 characters").optional(),
 
   priority: z.enum(["low", "medium", "high"]),
-
-  // dueDate: z.string().min(1,"Due date is required").refine((date)=>{
-  //   const today=new Date();
-  //   today.setHours(0,0,0,0);
-    
-  //   return new Date(date)>=today
-  // },"Due date cannot be in the past"),
+userId:z.number(),
+  dueDate: z.string().min(1,"Due date is required").refine((date)=>{
+    const today=new Date();
+    today.setHours(0,0,0,0);
+    return new Date(date)>=today
+  },"Due date cannot be in the past").nullable(),
 
   completed: z.boolean(),
 });

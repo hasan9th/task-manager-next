@@ -48,7 +48,6 @@ export async function getATask(taskId: number): Promise<Task | null> {
 }
 
 export async function createTask(data: CreateTaskInput): Promise<Task> {
-  console.log(data)
   const plan=db.sql.public.tasks.insert([{
     title:data.title,description:data.description,priority:data.priority,due_date:data.dueDate,user_id:data.userId
   }]).returning(
