@@ -17,9 +17,9 @@ export const updateTaskSchema=z.object(
 
   priority: z.enum(["low", "medium", "high"]).optional(),
 
-  dueDate: z.string().date().nullable().optional(),
+  dueDate: z.string().nullable().optional(),
 
   completed: z.boolean().optional(),
   }
-).refine((data)=>data.title!==undefined||data.completed!==undefined,{message:"At least one field must be provided"})
+).refine((data)=>data.title!==undefined||data.completed!==undefined||data.dueDate!==undefined||data.completed!==undefined,{message:"At least one field must be provided"})
   export type UpdateTaskInput=z.infer<typeof updateTaskSchema>;

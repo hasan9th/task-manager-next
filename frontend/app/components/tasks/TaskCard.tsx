@@ -4,8 +4,14 @@ import PriorityBadge from "@/app/components/ui/PriorityBadge";
 import StatusBadge from "@/app/components/ui/StatusBadge";
 import Link from "next/link";
 import { Pencil, Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { SetStateAction } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';import { SetStateAction } from "react";
+import { Button } from "@/components/ui/button";
 interface TaskCardProps {
   task: Task;
   onDelete: (id: number) => void;

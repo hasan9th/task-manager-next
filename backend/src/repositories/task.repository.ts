@@ -8,6 +8,7 @@ import {
   TaskPriority,
 } from "../types/tasks.js";
 import { db, runtime } from "../prisma/db.js";
+import { object } from "zod";
 export async function getAllTask(): Promise<Task[] | null> {
   const plan = db.sql.public.tasks
     .select(
@@ -48,21 +49,31 @@ export async function getATask(taskId: number): Promise<Task | null> {
 }
 
 export async function createTask(data: CreateTaskInput): Promise<Task> {
-  const plan=db.sql.public.tasks.insert([{
-    title:data.title,description:data.description,priority:data.priority,due_date:data.dueDate,user_id:data.userId
-  }]).returning(
+  const plan = db.sql.public.tasks
+    .insert([
+      {
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        due_date: data.dueDate,
+        user_id: data.userId,
+      },
+    ])
+    .returning(
       "id",
       "title",
       "description",
       "completed",
       "created_at",
       "due_date",
-      "priority",).build();
-  const rows =await runtime.query(plan)
-  
-if (!rows[0]) {
-  throw new Error("Failed to create task");
-}
+      "priority",
+    )
+    .build();
+  const rows = await runtime.query(plan);
+
+  if (!rows[0]) {
+    throw new Error("Failed to create task");
+  }
   return mapTaskRowToTask(rows[0]);
 }
 
@@ -71,51 +82,54 @@ export async function updateTask(
   data: UpdateTaskInput,
 ): Promise<Task | null> {
   const { title, description, priority, completed, dueDate } = data;
-  const fields: string[] = [];
-  const values: unknown[] = [];
+
+  const updates: {
+    title?: string;
+    description?: string;
+    completed?: boolean;
+    priority?: TaskPriority;
+    due_date?: string|null;
+  } = {};
 
   if (title !== undefined) {
-    fields.push(`title=$${values.length + 1}`);
-    values.push(title);
+    updates.title = title;
   }
   if (completed !== undefined) {
-    fields.push(`completed=$${values.length + 1}`);
-    values.push(completed);
+    updates.completed = completed;
   }
   if (description !== undefined) {
-    fields.push(`description=$${values.length + 1}`);
-    values.push(description);
+    updates.description = description;
   }
   if (priority !== undefined) {
-    fields.push(`priority=$${values.length + 1}`);
-    values.push(priority);
+    updates.priority = priority;
   }
   if (dueDate !== undefined) {
-    fields.push(`due_date=$${values.length + 1}`);
-    values.push(dueDate);
+    updates.due_date = dueDate;
   }
-  if (fields.length === 0) {
+  if (Object.keys(updates).length === 0) {
     return null;
   }
+  const plan = db.sql.public.tasks
+    .update(updates)
+    .where((f, fns) => fns.eq(f.id, id))
+    .returning(
+      "id",
+      "title",
+      "description",
+      "completed",
+      "created_at",
+      "due_date",
+      "priority",
+    )
+    .build();
+  const rows = await runtime.query(plan);
 
-  values.push(id);
-  const result = await pool.query<TaskRow>(
-    `UPDATE tasks SET ${fields.join(", ")} where id=$${values.length} RETURNING id,title,completed,description,priority,due_date,created_at`,
-    values,
-  );
-  const row = result.rows[0];
+  const row = rows[0];
   return row ? mapTaskRowToTask(row) : null;
 }
 
-export async function removeTask(id: number): Promise<Task | null> {
-  const result = await pool.query<TaskRow>(
-    `
-    DELETE FROM tasks
-     WHERE id=$1
-     RETURNING id,title,completed,description,priority,due_date,created_at
-     `,
-    [id],
-  );
-  const row = result.rows[0];
-  return row ? mapTaskRowToTask(row) : null;
+export async function removeTask(id: number): Promise<number> {
+  const plan=db.sql.public.tasks.delete().where((f,fns)=>fns.eq(f.id,id)).build();
+  const rows=await runtime.execute(plan);
+  return rows.affectedRows;
 }

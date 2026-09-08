@@ -46,6 +46,7 @@ export const createTask = async (
 ) => {
   try {
     const result = createTaskSchema.safeParse(req.body);
+  
     if (!result.success) {
       return res
         .status(400)
@@ -96,13 +97,10 @@ export const removeTask = async(req: Request, res: Response, next: NextFunction)
       return;
     }
     const deleted =await removeTaskService(id);
-    if (!deleted) {
-      return res.status(404).json({
-        message: "Task not found",
-      });
+    if (deleted===0) {
+      return res.status(404).send();
     }
-    console.log(deleted)
-    return res.status(204).json({ message: "Task deleted successfully",deleted});
+    return res.status(204).json({ message: "Task deleted successfully"});
   } catch (error) {
     next(error);
   }

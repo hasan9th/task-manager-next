@@ -26,7 +26,7 @@ export async function createTask(data:CreateTaskInput) {
 export async function updateTask(id:number,data:UpdateTaskInput): Promise<Task | null> {
   return updateTaskRepository(id,data);
 }
-export async function removeTask(id: number):Promise<Task|null> {
-  const deleteItem = removeTaskRepository(id);
-  return deleteItem;
+export async function removeTask(id: number):Promise<number> {
+  return await removeTaskRepository(id);
+   
 }
