@@ -37,7 +37,6 @@ function UpdateDialog({
       }}
     >
       <form>
-        x{" "}
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Task {task?.title}</DialogTitle>
@@ -46,7 +45,7 @@ function UpdateDialog({
 
             </DialogDescription>
           </DialogHeader>
-          <TaskForm task={task} />
+          <TaskForm task={task} onClose={onClose}/>
         </DialogContent>
       </form>
     </Dialog>

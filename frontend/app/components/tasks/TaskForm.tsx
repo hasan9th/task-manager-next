@@ -11,7 +11,7 @@ import { taskSchema, TaskFormData } from "@/app/schema/taskSchema";
 import { useTask } from "@/app/hooks/useTask";
 import { Task } from "@/app/types/task";
 import { JSX } from "react/jsx-runtime";
-export default function TaskForm({ task }: { task: Task | null }): JSX.Element {
+export default function TaskForm({ task,onClose }: { task: Task | null;onClose:()=>void }): JSX.Element {
   const { addTask, updateTask } = useTask();
   const defaultValues: TaskFormData = {
     title: "",
@@ -43,6 +43,8 @@ export default function TaskForm({ task }: { task: Task | null }): JSX.Element {
       task !== null ? updateTask(data, task.id) : addTask(data);
     }
     reset();
+    onClose();
+
   }
 
   return (
