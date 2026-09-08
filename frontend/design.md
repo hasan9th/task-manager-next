@@ -1,134 +1,322 @@
----
-version: "alpha"
-name: "Flat Design Corporativo"
-description: "Corporate flat design landing page. Ideal for landing pages, saas. AI-ready template."
-colors:
-  primary: "#007BFF"
-  secondary: "#343A40"
-  tertiary: "#FFFFFF"
-  neutral: "#F8F9FA"
-  surface: "#28A745"
-  accent: "#FFC107"
-typography:
-  h1:
-    fontFamily: Lato
-    fontSize: 2.5rem
-    fontWeight: 700
-  body-md:
-    fontFamily: Lato
-    fontSize: 1rem
-    fontWeight: 400
-rounded:
-  sm: 4px
-  md: 8px
-  lg: 12px
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.neutral}"
-    rounded: "{rounded.sm}"
-    padding: 12px
----
 
-## Overview
+Genesis — Design System
+Technology Stack
+Next.js
 
-Task manager app flat design landing page. AI-ready template. Task manager app flat design didn't win on merit alone — it won on safety. When Microsoft stripped Chrome of its Aero glass in 2012 and Google flattened everything into Material, enterprise teams finally had permission to stop pretending skeuomorphism was necessary. The boardroom exhaled. Clean geometry, solid colors, predictable grids. Nobody gets fired for choosing flat.
+TypeScript
 
-And that's precisely the tension. Flat became the uniform of serious software — the navy suit of interface design. It signals competence, structure, reliability. Every enterprise SaaS from 2014 onward adopted some version of it because it photographs well in pitch decks and offends absolutely no one. The visual language of "we are a real company."
+TailwindCSS
 
-But here's what nobody says out loud: most corporate flat design is boring on purpose. The trade-off is real. You gain instant credibility and cross-cultural neutrality. You lose memorability. You lose the thing that makes someone actually enjoy using your tool on a Tuesday afternoon. The best practitioners know this and smuggle personality back in through motion, spacing rhythm, and typographic choices — not through the color palette.
+shadcn/ui
 
-- Density: 3/10 — Airy
-- Variance: 2/10 — Structured
-- Motion: 6/10 — Expressive
+1. Overview
+Genesis is a minimal, fast, and responsive task manager built with Next.js and shadcn/ui. The design emphasizes clarity, consistency, and low cognitive load. Users can create, edit, organize, and track tasks across devices. Every visual rule in this document ensures a unified, predictable experience across all screens.
 
-- **Style:** Clean, Professional, Modern
-- **Keywords:** flat design, corporate, clean, professional, modern, minimalist, vibrant, user-friendly, structured, efficient
-- **Era:** Contemporary, Corporate
-- **Light/Dark:** ✓ Full / ✗ No
+2. Responsive Behaviour
+Mobile‑first layout
 
-## Colors
+Fully responsive across mobile, tablet, and desktop
 
-- **Corporate Blue** (#007BFF) — Accent highlight, links and focus states
-- **Dark Grey** (#343A40) — Dark surface, primary background
-- **White** (#FFFFFF) — Light surface, card backgrounds
-- **Light Grey** (#F8F9FA) — Secondary text, borders, muted elements
-- **Success Green** (#28A745) — Success states, positive indicators
-- **Warning Orange** (#FFC107) — Warning states, attention indicators
-- **Danger Red** (#DC3545) — Error states, destructive actions
-- **Info Cyan** (#17A2B8) — Secondary accent
+No horizontal scrolling in any view
 
+3. Color System
+Primary — #6366F1  
+CTAs, active states, links, focus rings
 
-## Typography
+Primary Hover — #4F46E5
 
-- **Display / Hero:** Lato — Weight 700, tight tracking, used for headline impact
-- **Body:** Lato — Weight 400, 16px/1.6 line-height, max 72ch per line
-- **UI Labels / Captions:** Lato — 0.875rem, weight 500, slight letter-spacing
-- **Monospace:** JetBrains Mono — Used for code, metadata, and technical values
+Secondary — #20970B  
+Reserved for DESIGN.md branding only
 
-Scale:
-- Hero: clamp(2.5rem, 5vw, 4rem)
-- H1: 2.25rem
-- H2: 1.5rem
-- Body: 1rem / 1.6
-- Small: 0.875rem
+Neutral — #9C9C9C  
+Muted text, placeholders, timestamps
 
+Background — #FAFAFA
 
-## Layout
+Surface — #FFFFFF
 
-- **Grid:** CSS Grid primary. Max-width containment: 1280px centered with 1.5rem side padding.
-- **Spacing rhythm:** Balanced. Base unit: 0.5rem (8px).
-- **Section vertical gaps:** clamp(4rem, 8vw, 8rem).
-- **Hero layout:** Split-screen (text left, visual right).
-- **Feature sections:** Zig-zag alternating text+image rows. No 3-equal-columns.
-- **Mobile collapse:** All multi-column layouts collapse below 768px. No horizontal overflow.
-- **z-index contract:** base (0) / sticky-nav (100) / overlay (200) / modal (300) / toast (500).
+Text Primary — #0A0A0A
 
+Text Secondary — #6B6B6B
 
-## Elevation & Depth
+Border — #E8E8EC
 
-Sharp corners, solid colors, clean typography, intuitive icons, simple animations, clear visual hierarchy, focus on usability, grid-based layout
+Success — #10B981
 
-- **Physics:** Spring — stiffness 120, damping 20. Confident, weighted transitions.
-- **Entry animations:** Fade + translate-Y (16px → 0) over 480ms ease-out. Staggered cascades for lists: 100ms between items.
-- **Hover states:** Scale(1.03) + shadow lift over 200ms.
-- **Page transitions:** Fade + slide (300ms).
-- **Performance:** Only transform and opacity animated. No layout-triggering properties.
+Warning — #F59E0B
 
+Error — #EF4444
 
-## Shapes
+4. Typography
+Display Font: General Sans (Fontshare)
 
-Base corner radius: 4px. See rounded tokens in front matter for the full scale.
+Body Font: DM Sans (Google Fonts)
 
+Code Font: JetBrains Mono (Google Fonts)
 
-## Components
+Type Scale
+Display — 72px
 
-- **Primary Button:** Rounded (4px) shape. Accent color fill. Hover: 8% darken + subtle lift shadow. Active: -1px translate tactile press. Font weight 600. No outer glows.
-- **Secondary / Ghost Button:** Outline variant. 1.5px border in muted color. Text in primary color. Hover: subtle background fill.
-- **Cards:** Rounded (4px) corners. Surface background. Subtle shadow (0 2px 12px rgba(0,0,0,0.06)). 1px border stroke.
-- **Inputs:** Label above input. 1px border stroke. Focus ring: 2px accent color offset 2px. Error text below in semantic red. No floating labels.
-- **Navigation:** Primary surface background. Active item: accent color indicator. Font weight 500 when active.
-- **Skeletons:** Shimmer animation matching component dimensions. No circular spinners.
-- **Empty States:** Icon-based composition with descriptive text and action button.
+Headline — 60px
 
+Section Heading — 32px
 
-## Do's and Don'ts
+Subhead — 24px
 
-- No emojis in UI — use icon system only (Lucide, Heroicons)
-- No decorative gradients — flat color only
-- No shadows heavier than 0 2px 8px rgba(0,0,0,0.08)
-- No pure black (#000000) — use off-black or charcoal variants
-- No oversaturated accent colors (saturation cap: 80%)
-- No 3-column equal-width feature layouts — use zig-zag or asymmetric grid
-- No `h-screen` — use `min-h-[100dvh]`
-- No AI copywriting clichés: "Elevate", "Seamless", "Unleash", "Next-Gen"
-- No broken external image links — use picsum.photos or inline SVG
-- No generic lorem ipsum in demos
+Body — 15px
 
-- Do Sharp corners
-- Do Solid colors
-- Do Clean typography
-- Do Intuitive icons
-- Do Simple animations
-- Do Grid-based layout
+Small — 13px
+
+Caption — 12px
+
+Overline — 11px uppercase
+
+Line Heights
+Display: 1.05
+
+Headline: 1.1
+
+Body: 1.5
+
+Small/Caption: 1.4
+
+5. Elevation
+Minimal shadows
+
+Cards: 1px border, hover shadow 0 8px 30px rgba(0,0,0,0.08)
+
+Buttons: tinted glow on hover 0 4px 12px rgba(99,102,241,0.35)
+
+Navigation: uses backdrop‑blur instead of shadow
+
+Dropdowns/Popovers: shadow-lg
+
+Focus ring: 0 0 0 3px rgba(99,102,241,0.12)
+
+6. Components
+Buttons
+Primary: indigo fill, white text, 6px radius
+
+Secondary: transparent bg, 1px border
+
+Ghost: text‑only
+
+Destructive: red text + red border
+
+Hover: shift up 1px
+
+Sizes: 32px / 38px / 44px
+
+Cards
+White surface
+
+1px border
+
+12px radius
+
+Hover lift: 2px
+
+Transition: 200ms
+
+Inputs
+1px border
+
+6px radius
+
+Padding: 10px × 14px
+
+Placeholder: muted
+
+Focus: indigo border + ring
+
+Error: red border
+
+Chips
+Rounded‑full
+
+Gray background
+
+Active: indigo bg + white text
+
+Status chips use semantic colors
+
+Lists
+Stacked rows
+
+1px dividers
+
+Padding: 12px × 16px
+
+Hover: subtle bg
+
+Checkboxes
+20px
+
+Rounded‑full
+
+Gray unchecked
+
+Indigo checked
+
+Tooltips
+Native browser tooltips only
+
+Navigation
+Sticky top
+
+Backdrop‑blur
+
+Height: 56px
+
+1px bottom border
+
+Desktop: centered links
+
+Mobile: hamburger drawer
+
+Search
+Trigger: ⌘K
+
+Rounded‑xl bar
+
+Icon + shortcut badge
+
+7. Component Rules
+Use shadcn/ui components for all primitives
+
+Do not create custom buttons
+
+Do not create custom inputs
+
+Use Card, Dialog, Sheet from shadcn/ui
+
+8. Spacing
+Base unit: 4px
+
+Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96
+
+Component padding:
+
+Small: 8×12
+
+Medium: 10×16
+
+Large: 12×24
+
+Section spacing:
+
+Mobile: 32px
+
+Tablet: 48px
+
+Desktop: 64px
+
+Container max width: 1280px
+
+Card grid gap: 20–24px
+
+9. Border Radius
+4px — tags, chips, badges
+
+6px — buttons, inputs
+
+8px — dropdowns, panels
+
+12px — cards, search bar
+
+9999px — avatars, status dots
+
+10. Do’s and Don’ts
+Do
+Use indigo only for interactive elements
+
+Maintain the 4px spacing grid
+
+Use General Sans for headings
+
+Use DM Sans for body
+
+Keep card radius 12px, button/input radius 6px
+
+Ensure contrast in light/dark modes
+
+Don’t
+Use pure black or pure white for text
+
+Add decorative gradients or illustrations
+
+Use shadows on static elements
+
+Use more than two font weights per screen
+
+Place more than one primary button in a section
+
+11. Task Grid Layout
+Tailwind pattern:
+grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
+
+Rules
+Mobile: 1 task per row
+
+XL: 4 tasks per row
+
+Use gap-4 or gap-6
+
+Avoid custom breakpoints
+
+Cards must have equal height (grid-auto-rows: 1fr)
+
+No horizontal scrolling
+
+Prioritize readability over density
+
+12. Sidebar Layout Design Rule (NEW)
+A sidebar is used for navigation and task grouping. It must follow these rules:
+sidebar must use shadcn ui sidebar component
+Sidebar Structure
+Width: 240px desktop, 200px tablet, full‑width drawer on mobile
+
+Background: light gray #F3F3F3
+
+Border: 1px solid #E8E8EC
+
+Padding: 24px vertical, 20px horizontal
+
+Typography:
+
+Section titles: 14px, medium, Text Secondary
+
+Links: 15px, medium, Text Primary
+
+Sidebar Elevation
+No shadow
+
+Uses border + subtle contrast instead of elevation
+
+Mobile drawer uses backdrop‑blur
+
+Sidebar Interaction
+Active link:
+
+Background: #EDEDED
+
+Text: Primary
+
+Border-left: 3px solid Primary
+
+Hover:
+
+Background: #F7F7F7
+
+Sidebar Spacing
+16px gap between items
+
+32px gap between sections
+
+Icons: 20px size, muted color
+
+Sidebar Behavior
+Sticky on desktop
+
+Collapsible on tablet
 
