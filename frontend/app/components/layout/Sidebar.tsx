@@ -6,7 +6,7 @@ import GlobeImage from"@/public/globe.svg";
 export  default function Sidebar(){
     return (
             <aside style={{ width: 200, padding: 16, borderRight: "1px solid #ddd" }}>
-      <Image width={100} height={100}  src={GlobeImage.src} alt="sss"/>
+      <Image width={100} height={100}  loading="eager" src={GlobeImage.src} alt="sss"/>
 
       <nav>
         <ul style={{ listStyle: "none", padding: 0 }}>

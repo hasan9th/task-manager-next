@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 export default async function TaskDetails({
   params,
 }: {
-  params: Promise<{ taskId: string }>;
+  params: Promise<{ taskId: number }>;
 }) {
   const { taskId } = await params;
 
@@ -26,6 +26,9 @@ export default async function TaskDetails({
       </p>
       <p>
         <strong>Priority:</strong> {task.priority}
+      </p>
+            <p>
+        <strong>due date:</strong> {task.dueDate}
       </p>
     </div>
   );

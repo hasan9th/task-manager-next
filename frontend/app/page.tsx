@@ -1,3 +1,4 @@
+
 import TaskList from "@/app/components/tasks/TaskList";
 
 import TaskForm from "@/app/components/tasks/TaskForm";
@@ -15,7 +16,7 @@ import {
 
 export function TaskFormDialog() {
   return (
-    <Dialog>
+    <Dialog >
       <form>
         <DialogTrigger render={<Button variant="outline">Add new Task</Button>} />
         <DialogContent className="sm:max-w-sm">
@@ -26,7 +27,7 @@ export function TaskFormDialog() {
               done.
             </DialogDescription>
           </DialogHeader>
-                <TaskForm />
+                <TaskForm task={null} onClose={null}/>
 
      
       
