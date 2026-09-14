@@ -10,60 +10,68 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';import { SetStateAction } from "react";
+} from "@/components/ui/card";
+import { SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 interface TaskCardProps {
   task: Task;
   onDelete: (id: number) => void;
   onCompletionToggle: (id: number) => void;
-  onEdit:()=>void
+  onEdit: () => void;
 }
 export default function TaskCard({
   task,
   onCompletionToggle,
   onDelete,
-  onEdit
+  onEdit,
 }: TaskCardProps) {
   return (
     <Card>
       <CardContent className="">
         <div className="flex gap-1.5">
-          <button
+          <Button
+            variant={"outline"}
+            size={"icon-lg"}
             type="button"
             aria-label="Edit task"
             className="size-6"
             onClick={() => onDelete(task.id)}
           >
             <Trash2 />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={"outline"}
+            size={"icon-lg"}
             type="button"
             aria-label="Edit task"
             className="size-6"
-            onClick={() =>onEdit() }
+            onClick={() => onEdit()}
           >
             <Pencil />
-          </button>
+          </Button>
         </div>
         <h2>{task.title}</h2>
         <p>{task.description}</p>
         <p>{task.dueDate}</p>
         <PriorityBadge priority={task.priority} />
         <StatusBadge completed={task.completed} />
-        <button
+        <Button
+          variant={"secondary"}
+          size={"default"}
           type="button"
           aria-label="Edit task"
           className=""
           onClick={() => onCompletionToggle(task.id)}
         >
           Toggle Completion
-        </button>
-        <hr />
-        <Link href={`/task/${task.id}`}>View</Link>
+        </Button>
       </CardContent>
 
-      <CardFooter className="border-t border-[#E8E8EC] bg-[#FAFAFA] px-6 py-3">
-        <Button variant="ghost" className="ml-auto text-[#6366F1] hover:text-[#4F46E5]">
+      <CardFooter className="">
+        <Button
+          variant="ghost"
+          className="ml-auto text-[#6366F1] hover:text-[#4F46E5]"
+        >
           <Link href={`/task/${task.id}`}>View task</Link>
         </Button>
       </CardFooter>
