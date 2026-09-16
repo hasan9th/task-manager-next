@@ -1,6 +1,6 @@
 node_modules/
 dist/
-.env
+# .env
 # AI coding agents / IDE-specific files
 .agents/
 .claude/
