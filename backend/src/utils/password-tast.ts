@@ -3,7 +3,7 @@ import {
   comparePassword,
 } from "./password.js";
 
-const password = "MySecret123";
+const password = "hasan123";
 
 const passwordHash = await hashPassword(password);
 

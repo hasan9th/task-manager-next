@@ -9,7 +9,7 @@ import {
 } from "../types/tasks.js";
 import { db, runtime } from "../prisma/db.js";
 import { object } from "zod";
-export async function getAllTask(): Promise<Task[] | null> {
+export async function getAllTask(userId:number): Promise<Task[] | null> {
   const plan = db.sql.public.tasks
     .select(
       "id",
@@ -19,7 +19,7 @@ export async function getAllTask(): Promise<Task[] | null> {
       "created_at",
       "due_date",
       "priority",
-    )
+    ).where((f,fns)=>fns.eq(f.user_id,userId))
     .build();
   const tasks = await runtime.query(plan);
   if (tasks.length === 0) {
@@ -28,7 +28,7 @@ export async function getAllTask(): Promise<Task[] | null> {
   return tasks.map(mapTaskRowToTask);
 }
 
-export async function getATask(taskId: number): Promise<Task | null> {
+export async function getTaskById(taskId: number,userId:number): Promise<Task | null> {
   const plan = db.sql.public.tasks
     .select(
       "id",
@@ -39,16 +39,20 @@ export async function getATask(taskId: number): Promise<Task | null> {
       "due_date",
       "priority",
     )
-    .where((f, fns) => fns.eq(f.id, taskId))
+    .where((f, fns) => fns.and(fns.eq(f.id, taskId),fns.eq(f.user_id,userId)))
     .build();
+
   const task = await runtime.query(plan);
+    console.log("xxxxxxxxxxxxx",task)
   if (task.length === 0) {
     return null;
   }
+  
+
   return mapTaskRowToTask(task[0]);
 }
 
-export async function createTask(data: CreateTaskInput): Promise<Task> {
+export async function createTask(data: CreateTaskInput,userId:number): Promise<Task> {
   const plan = db.sql.public.tasks
     .insert([
       {
@@ -56,7 +60,7 @@ export async function createTask(data: CreateTaskInput): Promise<Task> {
         description: data.description,
         priority: data.priority,
         due_date: data.dueDate,
-        user_id: data.userId,
+        user_id: userId,
       },
     ])
     .returning(
@@ -80,6 +84,7 @@ export async function createTask(data: CreateTaskInput): Promise<Task> {
 export async function updateTask(
   id: number,
   data: UpdateTaskInput,
+  userId:number
 ): Promise<Task | null> {
   const { title, description, priority, completed, dueDate } = data;
 
@@ -111,7 +116,7 @@ export async function updateTask(
   }
   const plan = db.sql.public.tasks
     .update(updates)
-    .where((f, fns) => fns.eq(f.id, id))
+    .where((f, fns) => fns.and(fns.eq(f.id, id),fns.eq(f.user_id,userId)))
     .returning(
       "id",
       "title",
@@ -128,8 +133,8 @@ export async function updateTask(
   return row ? mapTaskRowToTask(row) : null;
 }
 
-export async function removeTask(id: number): Promise<number> {
-  const plan=db.sql.public.tasks.delete().where((f,fns)=>fns.eq(f.id,id)).build();
+export async function removeTask(id: number,userId:number): Promise<number> {
+  const plan=db.sql.public.tasks.delete().where((f,fns)=>fns.and(fns.eq(f.user_id,userId),fns.eq(f.id,id))).build();
   const rows=await runtime.execute(plan);
   return rows.affectedRows;
 }

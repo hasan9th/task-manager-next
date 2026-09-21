@@ -23,3 +23,8 @@ export function generateAccessToken(payload: AccessTokenPayload): string {
   };
   return jwt.sign(payload, getJwtSecret(), options);
 }
+export function verifyAccessToken(
+  token:string
+):AccessTokenPayload{
+  return jwt.verify(token,getJwtSecret()) as AccessTokenPayload
+}

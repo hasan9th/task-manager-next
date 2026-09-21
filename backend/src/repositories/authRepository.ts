@@ -45,3 +45,24 @@ export async function createUser(data: CreateUserInput):Promise<SafeUser> {
   }
   return mapUserRowToSafeUser(rows[0]);
 }
+export async function getUserById(
+  id: number,
+): Promise<SafeUser | null> {
+  const plan = db.sql.public.users
+    .select(
+      "id",
+      "name",
+      "email",
+      "created_at",
+    )
+    .where((f, fns) => fns.eq(f.id, id))
+    .build();
+
+  const rows = await runtime.query(plan);
+
+  if (!rows[0]) {
+    return null;
+  }
+
+  return mapUserRowToSafeUser(rows[0]);
+}
