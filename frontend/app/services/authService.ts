@@ -1,8 +1,8 @@
 import { LoginData } from "../schema/authSchema";
-import { LoginResponse, saveToken } from "../utils/auth";
+import { apiFetch } from "../utils/api";
+import { AuthUser, LoginResponse, saveToken } from "../utils/auth";
 
 export async function login(loginData: LoginData): Promise<LoginResponse|null> {
-  try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
       {
@@ -15,11 +15,17 @@ export async function login(loginData: LoginData): Promise<LoginResponse|null> {
       throw new Error("Login failed");
       
     }
+      if (response.status === 401) {
+    return null;
+  }
     const data: LoginResponse = await response.json();
     saveToken(data.token);
     return data;
-  } catch (error) {
-    console.log(error);
-    return null
-  }
+  
 }
+
+export async function authMe():Promise<{user:AuthUser}> {
+const response=await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`)
+if(!response.ok){throw new Error("!!!")}
+return await response.json()
+} 

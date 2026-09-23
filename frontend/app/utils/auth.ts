@@ -1,3 +1,6 @@
+'use client'
+import { authMe } from "../services/authService";
+
 export interface AuthUser{
     id:number;
     name:string;
@@ -11,6 +14,10 @@ export interface LoginResponse{
 
 const TOKEN_KEY = "taskflow_access_token";
 
+export async function getMe(){
+  const data:{ user: AuthUser }=await authMe()
+   return data;
+}
 export function saveToken(token: string): void {
   localStorage.setItem(TOKEN_KEY, token);
 }

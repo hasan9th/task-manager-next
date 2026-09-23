@@ -12,15 +12,48 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@base-ui/react";
 import { login } from "../services/authService";
-async function onSubmit(data:LoginData){
-const result = await login(data)
-console.log(result)
-}
-export function FieldInput() {
-    const {register, handleSubmit,formState:{errors}}=useForm<LoginData>({resolver:zodResolver(loginSchema)});
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../hooks/useAuth";
 
+
+
+export default function Login(){
+    return(
+        <div className="w-full flex flex-col items-center">
+        
+        <h1>Login page</h1>
+        <FieldInput/>
+      </div>
+    )
+}
+
+
+export function FieldInput() {
+   const [error,setError]=useState<string|null>(null)
+   const {setUser}=useAuth()
+   const router=useRouter();
+    const {register, handleSubmit,formState:{errors}}=useForm<LoginData>({resolver:zodResolver(loginSchema)});
+async function onSubmit(data:LoginData){
+ 
+  try {
+    const result = await login(data)
+    if(!result){
+      setError("Login failed Invalid user pass")
+      return;
+    }    
+    setUser(result.user);
+router.push('/')
+
+  } catch (error) {
+    console.log(error)
+    
+  }
+
+}
   return (
     <div className="w-full max-w-xs">
+      {error&&<h2 className="text-red-600">{error}</h2>}
         <form onSubmit={handleSubmit(data=>onSubmit(data))} >
         <FieldSet className="">
           <FieldGroup>
@@ -51,15 +84,3 @@ export function FieldInput() {
     </div>
   )
 }
-
-export default function Login(){
-    return(
-        <div className="w-full flex flex-col items-center">
-        
-        <h1>Login page</h1>
-        <FieldInput/>
-      </div>
-    )
-}
-
-

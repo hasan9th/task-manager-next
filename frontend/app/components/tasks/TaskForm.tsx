@@ -19,7 +19,6 @@ export default function TaskForm({ task,onClose }: { task: Task | null;onClose:(
     priority: "medium",
     completed: false,
     dueDate: null,
-    userId: 1,
   };
   if (task !== null) {
     ((defaultValues.title = task.title),
@@ -105,26 +104,7 @@ export default function TaskForm({ task,onClose }: { task: Task | null;onClose:(
               <option value="high">High</option>
             </select>
           </div>
-          <div>
-            <Label
-              htmlFor="userId"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Users
-            </Label>
-            <select
-              id="userId"
-              {...register("userId", { valueAsNumber: true })}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="1">Peter</option>
-              <option value="2">Lily</option>
-              <option value="3">Hesai</option>
-            </select>
-            {errors.userId && (
-              <p className="text-red-500 text-sm">{errors.userId.message}</p>
-            )}
-          </div>
+
           <div>
             <Label
               htmlFor="dueDate"

@@ -11,7 +11,6 @@ export const taskSchema = z.object({
     .optional(),
 
   priority: z.enum(["low", "medium", "high"]),
-  userId: z.number(),
   dueDate: z
     .string()
     .min(1, "Due date is required")

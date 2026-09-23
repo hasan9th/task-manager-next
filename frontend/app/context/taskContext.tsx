@@ -32,7 +32,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         setTasks(data);
       } catch (error) {
         console.error("Failed to fetch tasks:", error);
-        setError("Something went wrong...Failed to load tasks....");
+        setError(`Something went wrong...${error}`);
       } finally {
         setLoading(false);
       }

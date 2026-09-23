@@ -1,16 +1,14 @@
 import TaskList from "@/app/components/tasks/TaskList";
-import AddNewTask from "./components/tasks/AddNewTask";
-import { TasksProvider } from "./context/taskContext";
-
+import AddNewTask from "@/app/components/tasks/AddNewTask";
+import ProtectedRoute from "@/app/auth/protectedRoute";
 
 export default function Dashboard() {
   return (
-    <TasksProvider>
-      <div className="flex justify-end">
+    <ProtectedRoute>
+      <div className="flex flex-col ">
         <AddNewTask />
+        <TaskList />
       </div>
-
-      <TaskList />
-    </TasksProvider>
+    </ProtectedRoute>
   );
 }

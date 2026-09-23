@@ -28,8 +28,11 @@ export async function getTasks(): Promise<Task[]> {
     }),
   );
 }
-export async function getTaskById(id: number): Promise<Task> {
+export async function getTaskById(id: number): Promise<Task|null> {
   const response = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${id}`);
+  if (response.status === 404) {
+  return null;
+}
   if (!response.ok) {
     throw new Error("Task Fetch error...."+ JSON.stringify(response.status));
   }
@@ -59,7 +62,7 @@ export async function updateTaskApi(data: Partial<Task>, id: number) {
   }
 }
 export async function createTask(newTask: TaskFormData): Promise<Task> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, {
+  const response = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(newTask),
@@ -67,7 +70,7 @@ export async function createTask(newTask: TaskFormData): Promise<Task> {
   return await response.json();
 }
 export async function deleteTask(id: number): Promise<void> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${process.env.NEXT_PUBLIC_API_URL}/tasks/${id}`,
     { method: "DELETE" },
   );
