@@ -8,7 +8,6 @@ import {
   createTask,
 } from "@/app/services/taskService";
 import { TaskFormData } from "../schema/taskSchema";
-import { id } from "zod/locales";
 
 export interface TaskContextType {
   tasks: Task[];
@@ -19,7 +18,6 @@ export interface TaskContextType {
   deleteTask: (id: number) => void;
   updateTask: (updatedTask: TaskFormData, id: number) => void;
 }
-
 export const TasksContext = createContext<TaskContextType | null>(null);
 
 export function TasksProvider({ children }: { children: React.ReactNode }) {
@@ -34,7 +32,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         setTasks(data);
       } catch (error) {
         console.error("Failed to fetch tasks:", error);
-        setError("Something went wrong...Failed to load tasks....");
+        setError(`Something went wrong...${error}`);
       } finally {
         setLoading(false);
       }
@@ -46,7 +44,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const addTask: TaskContextType["addTask"] = async (newTask) => {
     try {
       const response = await createTask(newTask);
-      if (!response) {
+      if (response) {
         setTasks((prev) => [...prev, response]);
       }
     } catch (error) {

@@ -1,31 +1,45 @@
 import { NextFunction, Request, Response } from "express";
 import {
   getAllTasks,
-  getATask as getATaskService,
+  getTaskById as getTaskByIdService,
   createTask as createTaskService,
   updateTask as updateTaskService,
   removeTask as removeTaskService,
 } from "../services/taskService.js";
 import { createTaskSchema, updateTaskSchema } from "../schema/taskSchema.js";
+import { AuthenticatedRequest } from "../middleware/authMiddleware.js";
 export const getTasks = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const tasks = await getAllTasks();
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
+    const tasks = await getAllTasks(req.user.userId);
     res.json(tasks);
   } catch (err) {
     next(err);
   }
 };
-export const getATask = async (
-  req: Request,
+export const getTaskById = async (
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const task = await getATaskService(Number(req.params.id));
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
+    const task = await getTaskByIdService(
+      Number(req.params.id),
+      Number(req.user.userId),
+    );
     if (!task) {
       res.status(404).json({ message: "Task not found" });
     }
@@ -40,30 +54,40 @@ export const getAbout = (req: Request, res: Response) => {
   });
 };
 export const createTask = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {
   try {
     const result = createTaskSchema.safeParse(req.body);
-  
+
     if (!result.success) {
       return res
         .status(400)
         .json({ message: "Data was invalid", error: result.error.issues });
     }
-    const newTask = await createTaskService(result.data);
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
+    const newTask = await createTaskService(result.data, req.user.userId);
     res.status(201).json(newTask);
   } catch (err) {
     next(err);
   }
 };
 export const updateTask = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({
@@ -77,7 +101,7 @@ export const updateTask = async (
         .status(400)
         .json({ message: "Invalid data", error: result.error.issues });
     }
-    const newTask = await updateTaskService(id,result.data);
+    const newTask = await updateTaskService(id, result.data, req.user.userId);
     if (!newTask) {
       return res.status(404).json({ message: "Task not not found" });
     }
@@ -86,8 +110,17 @@ export const updateTask = async (
     next(err);
   }
 };
-export const removeTask = async(req: Request, res: Response, next: NextFunction) => {
+export const removeTask = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
     const id = Number(req.params.id);
 
     if (!Number.isInteger(id) || id <= 0) {
@@ -96,11 +129,11 @@ export const removeTask = async(req: Request, res: Response, next: NextFunction)
       });
       return;
     }
-    const deleted =await removeTaskService(id);
-    if (deleted===0) {
-      return res.status(404).send();
+    const deleted = await removeTaskService(id,req.user.userId);
+    if (deleted === 0) {
+      return res.status(404).json({message:"Task not found"});
     }
-    return res.status(204).json({ message: "Task deleted successfully"});
+    return res.status(204).json({ message: "Task deleted successfully" });
   } catch (error) {
     next(error);
   }

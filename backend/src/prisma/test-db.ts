@@ -1,6 +1,6 @@
 
 
-import { db } from "./db";
+import { db } from "./db.js";
 
 async function main() {
   const runtime = await db.connect();

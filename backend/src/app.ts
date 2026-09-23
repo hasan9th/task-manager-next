@@ -3,6 +3,7 @@ import cors from "cors";
 import {taskRouter} from './routes/taskRoutes.js'
 import { logger } from "./middleware/logger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { authRouter } from "./routes/authRoutes.js";
 
 const app = express();
 const PORT = 3001;
@@ -10,6 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use(logger)
 app.use('/tasks',taskRouter)
+app.use('/auth',authRouter)
 app.get('/error-test',(req,res,next)=>{next(new Error("xxxxx"))})
 app.use((req,res)=>res.json({    message: "TaskFlow API",}))
 app.use(errorHandler)

@@ -1,11 +1,10 @@
-import { TypeOf, z } from "zod";
+import { z } from "zod";
 
 export const createTaskSchema = z.object({
   title: z.string().trim().min(3).max(100),
   description:z.string().max(200).trim(),
   priority:z.enum(["low", "medium", "high"]),
    dueDate: z.string().date().nullable().optional(),
-   userId:z.number()
 
 });
 export type CreateTaskInput=z.infer<typeof createTaskSchema>;

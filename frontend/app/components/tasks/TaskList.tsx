@@ -7,7 +7,6 @@ import EmptyTask from "./EmptyList";
 import FilterButtons from "./FilterButtons";
 import { useState } from "react";
 import { FileWarningIcon, Watch } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -92,7 +91,7 @@ export default function TaskList(): ReactElement {
     <div>
       <UpdateDialog task={editingTask} onClose={() => setEditingTask(null)} />
       <FilterButtons changeFilter={changeFilter} filter={filter} />
-      <div className="grid grid-cols-2 gap-2">
+      <div className="w-full grid grid-cols-2 gap-2">
         {filterTasks.map((task) => (
           <TaskCard
             key={task.id}

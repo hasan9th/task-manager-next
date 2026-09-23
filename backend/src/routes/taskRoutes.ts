@@ -1,12 +1,13 @@
 import express from 'express'
-import { getTasks, getATask ,getAbout, createTask,updateTask,removeTask} from '../controllers/taskController.js'
+import { getTasks, getTaskById ,getAbout, createTask,updateTask,removeTask} from '../controllers/taskController.js'
+import { authMiddleware } from '../middleware/authMiddleware.js'
 
 
 export const taskRouter=express.Router()
 
-taskRouter.get('/',getTasks)
-taskRouter.get('/:id',getATask)
+taskRouter.get('/',authMiddleware,getTasks)
 taskRouter.get('/about',getAbout)
-taskRouter.post('/',createTask)
-taskRouter.patch('/:id',updateTask)
-taskRouter.delete('/:id',removeTask)
+taskRouter.get('/:id',authMiddleware,getTaskById)
+taskRouter.post('/',authMiddleware,createTask)
+taskRouter.patch('/:id',authMiddleware,updateTask)
+taskRouter.delete('/:id',authMiddleware,removeTask)
