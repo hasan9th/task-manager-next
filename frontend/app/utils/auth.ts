@@ -5,7 +5,7 @@ export interface AuthUser{
     id:number;
     name:string;
     email:string;
-    createAt:string;
+    createdAt:string;
 }
 export interface LoginResponse{
     user:AuthUser;

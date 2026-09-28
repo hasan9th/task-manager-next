@@ -44,11 +44,11 @@ export const login = async (
     const loginResult = await loginService(validation.data);
 
     if (!loginResult) {
-      res.status(401).json({
-        message: "Invalid username or password.",
+     return res.status(401).json({
+        message: "Invalid email  or password.",
       });
     }
-    res.status(200).json(loginResult);
+   return res.status(200).json(loginResult);
   } catch (error) {
     next(error);
   }

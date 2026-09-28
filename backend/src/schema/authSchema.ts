@@ -1,4 +1,4 @@
-import { z} from "zod"
+import { email, z} from "zod"
 
 export const registerSchema=z.object({
     name:z.string().min(2).max(100).trim(),
@@ -12,3 +12,8 @@ export const loginSchema=z.object({
 password: z.string().min(1).max(72)
 })
 export type LoginInput=z.infer<typeof loginSchema>
+
+export const accessTokenPayloadSchema =z.object({
+  userId:z.number().int().positive(),
+  email:z.email()
+})

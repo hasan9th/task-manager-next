@@ -5,11 +5,16 @@ import {
   createTask as createTaskRepository,
   updateTask as updateTaskRepository,
   removeTask as removeTaskRepository,
+  countTasks as countTasksRepository,
 } from "../repositories/task.repository.js";
-import { CreateTaskInput, UpdateTaskInput } from "../schema/taskSchema.js";
+import { CreateTaskInput, TaskQueryInput, UpdateTaskInput } from "../schema/taskSchema.js";
 
-export async function getAllTasks(userId:number): Promise<Task[]|null> {
-  return getAllTaskRepository(userId);
+export async function getAllTasks(userId:number,query:TaskQueryInput) {
+  const {page,limit}=query;
+  const offset=(page-1)*limit;
+  const [tasks,total]=await Promise.all([getAllTaskRepository(userId,limit,offset),countTasksRepository(userId)]);
+  const totalPages=Math.ceil(total/limit);
+  return {data:tasks,meta:{page,limit,total,totalPages}};
 }
 export async function getTaskById(id: number,userId:number): Promise<Task | null> {
   return getTaskByIdRepository(id,userId);

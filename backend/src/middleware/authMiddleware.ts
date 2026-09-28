@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { string } from "zod";
 import { verifyAccessToken } from "../utils/jwt.js";
 export interface AuthenticatedRequest extends Request {
   user?: {

@@ -1,15 +1,16 @@
-import pool from "../db/pool.js";
 import { CreateTaskInput, UpdateTaskInput } from "../schema/taskSchema.js";
 import {
   mapTaskRowToTask,
   Task,
-  TaskRow,
-  TaskSummary,
   TaskPriority,
 } from "../types/tasks.js";
 import { db, runtime } from "../prisma/db.js";
-import { object } from "zod";
-export async function getAllTask(userId:number): Promise<Task[] | null> {
+export async function countTasks(userId:number):Promise<number>{
+  const plan=db.sql.public.tasks.select("count",(f,fns)=>fns.count()).where((f,fns)=>fns.eq(f.user_id,userId)).build();
+  const count=await runtime.query(plan)
+  return count[0].count
+}
+export async function getAllTask(userId:number,limit:number,offset:number): Promise<Task[]> {
   const plan = db.sql.public.tasks
     .select(
       "id",
@@ -19,12 +20,9 @@ export async function getAllTask(userId:number): Promise<Task[] | null> {
       "created_at",
       "due_date",
       "priority",
-    ).where((f,fns)=>fns.eq(f.user_id,userId))
+    ).where((f,fns)=>fns.eq(f.user_id,userId)).orderBy("created_at",{direction:"desc"}).limit(limit).offset(offset)
     .build();
   const tasks = await runtime.query(plan);
-  if (tasks.length === 0) {
-    return null;
-  }
   return tasks.map(mapTaskRowToTask);
 }
 
@@ -43,7 +41,6 @@ export async function getTaskById(taskId: number,userId:number): Promise<Task | 
     .build();
 
   const task = await runtime.query(plan);
-    console.log("xxxxxxxxxxxxx",task)
   if (task.length === 0) {
     return null;
   }

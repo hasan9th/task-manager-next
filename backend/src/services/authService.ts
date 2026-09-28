@@ -4,7 +4,7 @@ import {
   findUserByEmailWithPassword,
 } from "../repositories/authRepository.js";
 import { LoginInput, RegisterInput } from "../schema/authSchema.js";
-import {  SafeUser, User } from "../types/auth.js";
+import { SafeUser } from "../types/auth.js";
 import { generateAccessToken } from "../utils/jwt.js";
 import { hashPassword, comparePassword } from "../utils/password.js";
 
@@ -23,7 +23,7 @@ export const register = async (
 
 export const login = async (
   data: LoginInput,
-): Promise<{ user: User; token: string } | null> => {
+): Promise<{ user: SafeUser; token: string } | null> => {
   const user = await findUserByEmailWithPassword(data.email);
   if (!user) {
     return null;
@@ -38,7 +38,12 @@ export const login = async (
   }
   const token = generateAccessToken({ userId: user.id, email: user.email });
   return {
-    user: {...user,passwordHash:""},
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+    },
     token,
   };
 };

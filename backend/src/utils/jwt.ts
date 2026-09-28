@@ -1,4 +1,5 @@
 import jwt, { SignOptions } from "jsonwebtoken";
+import { accessTokenPayloadSchema } from "../schema/authSchema.js";
 
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET;
@@ -26,5 +27,6 @@ export function generateAccessToken(payload: AccessTokenPayload): string {
 export function verifyAccessToken(
   token:string
 ):AccessTokenPayload{
-  return jwt.verify(token,getJwtSecret()) as AccessTokenPayload
+  const decode= jwt.verify(token,getJwtSecret());
+  return accessTokenPayloadSchema.parse(decode);
 }
