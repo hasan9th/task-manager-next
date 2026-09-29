@@ -8,10 +8,12 @@ import {
 } from "../services/taskService.js";
 import {
   createTaskSchema,
+  taskIdSchema,
   taskQuerySchema,
   updateTaskSchema,
 } from "../schema/taskSchema.js";
 import { AuthenticatedRequest } from "../middleware/authMiddleware.js";
+import { AppError } from "../errors/AppError.js";
 export const getTasks = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -32,7 +34,7 @@ export const getTasks = async (
     }
      
     const result = await getAllTasks(req.user.userId, queryResult.data);
-    res.json(result);
+    res.json(result.data);
   } catch (err) {
     next(err);
   }
@@ -48,12 +50,16 @@ export const getTaskById = async (
         message: "Authentication required",
       });
     }
+    const result=taskIdSchema.safeParse(req.params)
+    if(!result.success){
+      return res.json({message:"Invalid Data",error:result.error.issues})
+    }
     const task = await getTaskByIdService(
-      Number(req.params.id),
+      result.data.id,
       Number(req.user.userId),
     );
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      throw new AppError(404,"Task not found!")
     }
     return res.status(200).json(task);
   } catch (err) {
@@ -100,12 +106,12 @@ export const updateTask = async (
         message: "Authentication required",
       });
     }
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      return res.status(400).json({
-        message: "Invalid task ID",
-      });
+        const resultTaskId=taskIdSchema.safeParse(req.params)
+    if(!resultTaskId.success){
+      return res.json({message:"Invalid Data",error:resultTaskId.error.issues})
     }
+    const id = resultTaskId.data.id;
+
     const result = updateTaskSchema.safeParse(req.body);
 
     if (!result.success) {
@@ -129,18 +135,13 @@ export const removeTask = async (
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({
-        message: "Authentication required",
-      });
+      throw new AppError(401,"Authentication required")
     }
-    const id = Number(req.params.id);
-
-    if (!Number.isInteger(id) || id <= 0) {
-      res.status(400).json({
-        message: "Invalid task ID",
-      });
-      return;
+       const resultTaskId=taskIdSchema.safeParse(req.params)
+    if(!resultTaskId.success){
+      return res.json({message:"Invalid Data",error:resultTaskId.error.issues})
     }
+    const id = resultTaskId.data.id;
     const deleted = await removeTaskService(id, req.user.userId);
     if (deleted === 0) {
       return res.status(404).json({ message: "Task not found" });

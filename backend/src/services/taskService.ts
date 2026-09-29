@@ -11,8 +11,7 @@ import { CreateTaskInput, TaskQueryInput, UpdateTaskInput } from "../schema/task
 
 export async function getAllTasks(userId:number,query:TaskQueryInput) {
   const {page,limit}=query;
-  const offset=(page-1)*limit;
-  const [tasks,total]=await Promise.all([getAllTaskRepository(userId,limit,offset),countTasksRepository(userId)]);
+  const [tasks,total]=await Promise.all([getAllTaskRepository(userId,query),countTasksRepository(userId,query)]);
   const totalPages=Math.ceil(total/limit);
   return {data:tasks,meta:{page,limit,total,totalPages}};
 }

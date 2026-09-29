@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../errors/AppError.js";
 export const errorHandler=(err:Error,req:Request,res:Response,next:NextFunction)=>{
-    res.status(500).json({message:"server error invalid",error:err.message})
+    if(err instanceof AppError){
+            return res.status(err.statusCode).json({message:err.message})
+    }
+   return res.status(500).json({message:"server error invalid",error:err.message})
 
 }
